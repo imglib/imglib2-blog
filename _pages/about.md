@@ -16,24 +16,33 @@ For discrete data (images, n-dimensional arrays), ImgLib2 implements a variety o
 
 For continuous data (functions, n-dimensional interpolants), ImgLib2 implements a variety of interpolators, geometric transformations, and generator functions.  Coordinates and values can be accessed directly or transformed on-the-fly.
 
-These features enable 
-
-
 
 <p style="clear:left"></p>
 
-Need a quick start?  Install OpenJDK and mavenCheck out [BigDataViewer vistools](https://github.com/bigdataviewer/bigdataviewer-vistools), 
+Need a quick start?  Install OpenJDK and maven:
+```
+sudo apt install openjdk-16-jdk maven
+```
+
+Then check out [BigDataViewer vistools](https://github.com/bigdataviewer/bigdataviewer-vistools):
 ```
 git clone https://github.com/bigdataviewer/bigdataviewer-vistools.git
 ```
 
+Then start JShell in the BigDataViewer vistools project directory:
+```
+cd bigdataviewer-vistools
+mvn compile com.github.johnpoth:jshell-maven-plugin:1.3:run
+```
+
+Then try out this code snippet:
 ```java
 import bdv.util.*;
 import net.imglib2.position.FunctionRealRandomAccessible;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.Intervals;
 
-BdvFunctions.show(new FunctionRealRandomAccessible<>(2, (x, y) -> {
+BdvFunctions.show(new FunctionRealRandomAccessible<IntType>(2, (x, y) -> {
   int i = 0;
   double v = 0, c = x.getDoublePosition(0), d = x.getDoublePosition(1);
   for (; i < 64 && v < 4096; ++i) {
@@ -48,9 +57,3 @@ BdvFunctions.show(new FunctionRealRandomAccessible<>(2, (x, y) -> {
 }, IntType::new), Intervals.createMinMax(-1, -1, 1, 1), "", BdvOptions.options().is2D()).setDisplayRange(0, 64);
 ```
 
-
-This website is powered by **[fastpages](https://github.com/fastai/fastpages)** [^1].
-
-
-
-[^1]:a blogging platform that natively supports Jupyter notebooks in addition to other formats.
