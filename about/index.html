@@ -97,20 +97,28 @@ window.onload = wrap_img;
 
 <p>For continuous data (functions, n-dimensional interpolants), ImgLib2 implements a variety of interpolators, geometric transformations, and generator functions.  Coordinates and values can be accessed directly or transformed on-the-fly.</p>
 
-<p>These features enable</p>
-
 <p style="clear:left"></p>
 
-<p>Need a quick start?  Install OpenJDK and mavenCheck out <a href="https://github.com/bigdataviewer/bigdataviewer-vistools">BigDataViewer vistools</a>,</p>
+<p>Need a quick start?  Install OpenJDK and maven:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install openjdk-16-jdk maven
+</code></pre></div></div>
+
+<p>Then check out <a href="https://github.com/bigdataviewer/bigdataviewer-vistools">BigDataViewer vistools</a>:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/bigdataviewer/bigdataviewer-vistools.git
 </code></pre></div></div>
 
+<p>Then start JShell in the BigDataViewer vistools project directory:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd bigdataviewer-vistools
+mvn compile com.github.johnpoth:jshell-maven-plugin:1.3:run
+</code></pre></div></div>
+
+<p>Then try out this code snippet:</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">bdv.util.*</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">net.imglib2.position.FunctionRealRandomAccessible</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">net.imglib2.type.numeric.integer.IntType</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">net.imglib2.util.Intervals</span><span class="o">;</span>
 
-<span class="nc">BdvFunctions</span><span class="o">.</span><span class="na">show</span><span class="o">(</span><span class="k">new</span> <span class="nc">FunctionRealRandomAccessible</span><span class="o">&lt;&gt;(</span><span class="mi">2</span><span class="o">,</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+<span class="nc">BdvFunctions</span><span class="o">.</span><span class="na">show</span><span class="o">(</span><span class="k">new</span> <span class="nc">FunctionRealRandomAccessible</span><span class="o">&lt;</span><span class="nc">IntType</span><span class="o">&gt;(</span><span class="mi">2</span><span class="o">,</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
   <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
   <span class="kt">double</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="na">getDoublePosition</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">d</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="na">getDoublePosition</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
   <span class="k">for</span> <span class="o">(;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">64</span> <span class="o">&amp;&amp;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mi">4096</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">)</span> <span class="o">{</span>
@@ -125,15 +133,6 @@ window.onload = wrap_img;
 <span class="o">},</span> <span class="nl">IntType:</span><span class="o">:</span><span class="k">new</span><span class="o">),</span> <span class="nc">Intervals</span><span class="o">.</span><span class="na">createMinMax</span><span class="o">(-</span><span class="mi">1</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="s">""</span><span class="o">,</span> <span class="nc">BdvOptions</span><span class="o">.</span><span class="na">options</span><span class="o">().</span><span class="na">is2D</span><span class="o">()).</span><span class="na">setDisplayRange</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">64</span><span class="o">);</span>
 </code></pre></div></div>
 
-<p>This website is powered by <strong><a href="https://github.com/fastai/fastpages">fastpages</a></strong> <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>.</p>
-
-<div class="footnotes" role="doc-endnotes">
-  <ol>
-    <li id="fn:1" role="doc-endnote">
-      <p>a blogging platform that natively supports Jupyter notebooks in addition to other formats. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
 
       </div>
     </main><footer class="site-footer h-card">
