@@ -6,8 +6,8 @@
 # https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
 # https://learnxinyminutes.com/docs/yaml/
 
-title: ImgLib2 blog
-description: ImgLib2 news and tutorials
+title: ImgLib2 news and tutorials
+description: ImgLib2 news, release notes, tutorials, and discussions
 github_username: imglib
 # you can comment the below line out if your repo name is not different than your baseurl
 github_repo: "imglib2-blog"
@@ -39,8 +39,8 @@ baseurl: "/imglib2-blog" # the subpath of your site, e.g. "/blog".
 # Github and twitter are optional:
 minima:
   social_links:
-#    twitter: imglib2
-    github: imglib
+    twitter: "search?q=%23ImgLib2&src=typed_query&f=top"
+    github: "imglib"
 
 # Set this to true to get LaTeX math equation support
 use_math: true
