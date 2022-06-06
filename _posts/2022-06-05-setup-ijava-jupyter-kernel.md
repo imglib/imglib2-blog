@@ -4,11 +4,10 @@ layout: post
 branch: master
 badges: true
 author: Stephan Saalfeld
-description: Follow these instructions to setup the [IJava jupyter kernel](https://github.com/SpencerPark/IJava) by [Spencer Park](https://github.com/SpencerPark)
+description: Follow these instructions to setup the IJava jupyter kernel by Spencer Park.
 categories: [jupyter, ijava, jshell, java, kernel]
 title: Setup the IJava jupyter kernel
 ---
-# Setup the IJava jupyter kernel
 
 In this blog, we will show code snippets and examples to make the best use of [ImgLib2](https://github.com/imglib/imglib2), [BigDataViewer](https://github.com/bigdataviewer/bigdataviewer-core), and friends.  ImgLib2 is written to be fast and we will run code that needs to be compiled, so we cannot use any of the various interpreted scripting languages like Python, Groovy, or Javascript.  Instead, we will use the [JShell tool](https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8) that you can use directly in a terminal or through [Spencer Park's IJava jupyter kernel](https://github.com/SpencerPark/IJava).  You can also follow these tutorials in your own Java project and use your preferred IDE, but Jupyter notebooks are a great teaching tool.  Since jupyter is written in Python and most popular with the Python community, let's follow their ways and first thing create a virtual environment with conda.  The lack of version controlled dependency management for Python projects makes it necessary that practically every project must run in a container or virtual environment because the dependencies of different projects almost inevitably collide.  Conda is the most popular of several attempts to address this situation.  Conda cannot currently be installed from the default Ubuntu repositories, so much about that, but the [installation instructions](https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html) are tolerable, there is a PPA.  Now let's create an environment for jupyter:
 
