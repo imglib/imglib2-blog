@@ -4,8 +4,6 @@ title: About
 permalink: /about/
 ---
 
-<p style="float:left; margin-right:2em"><img src="{{site.baseurl}}/images/imglib2-logo.png" alt="ImgLib2 logo" /></p>
-
 ImgLib2 is a general-purpose, multidimensional image and data processing library.
 
 It provides a unified API to work with discrete and continuous n-dimensional data.  This API is interface driven and therefore extensible at will.
@@ -15,9 +13,6 @@ ImgLib2 includes implementations of standard numeric and non-numeric data types 
 For discrete data (images, n-dimensional arrays), ImgLib2 implements a variety of memory layouts, data generation, loading, and caching strategies, including data linearized into single primitive arrays, series of arrays, n-dimensional arrays of arrays ("cells"), stored in memory, generated or loaded from disk on demand, and cached in memory or on disk.  Coordinates and values can be accessed directly or through on-the-fly views that invert or permute axes, generate hyperslices or stack slices top higher dimensional datasets, collapse dimensions into vectors
 
 For continuous data (functions, n-dimensional interpolants), ImgLib2 implements a variety of interpolators, geometric transformations, and generator functions.  Coordinates and values can be accessed directly or transformed on-the-fly.
-
-
-<p style="clear:left"></p>
 
 Need a quick start?  Install OpenJDK and maven:
 ```
