@@ -9,8 +9,8 @@
 <meta property="og:title" content="Setup the IJava jupyter kernel" />
 <meta name="author" content="Stephan Saalfeld" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="How to install the IJava jupyter kernel" />
-<meta property="og:description" content="How to install the IJava jupyter kernel" />
+<meta name="description" content="Follow these instructions to setup the IJava jupyter kernel by Spencer Park" />
+<meta property="og:description" content="Follow these instructions to setup the IJava jupyter kernel by Spencer Park" />
 <link rel="canonical" href="https://imglib.github.io/imglib2-blog/jupyter/ijava/jshell/java/kernel/2022/06/05/setup-ijava-jupyter-kernel.html" />
 <meta property="og:url" content="https://imglib.github.io/imglib2-blog/jupyter/ijava/jshell/java/kernel/2022/06/05/setup-ijava-jupyter-kernel.html" />
 <meta property="og:site_name" content="ImgLib2 news and tutorials" />
@@ -19,7 +19,7 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Setup the IJava jupyter kernel" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Stephan Saalfeld"},"dateModified":"2022-06-05T00:00:00-05:00","datePublished":"2022-06-05T00:00:00-05:00","description":"How to install the IJava jupyter kernel","headline":"Setup the IJava jupyter kernel","mainEntityOfPage":{"@type":"WebPage","@id":"https://imglib.github.io/imglib2-blog/jupyter/ijava/jshell/java/kernel/2022/06/05/setup-ijava-jupyter-kernel.html"},"url":"https://imglib.github.io/imglib2-blog/jupyter/ijava/jshell/java/kernel/2022/06/05/setup-ijava-jupyter-kernel.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Stephan Saalfeld"},"dateModified":"2022-06-05T00:00:00-05:00","datePublished":"2022-06-05T00:00:00-05:00","description":"Follow these instructions to setup the IJava jupyter kernel by Spencer Park","headline":"Setup the IJava jupyter kernel","mainEntityOfPage":{"@type":"WebPage","@id":"https://imglib.github.io/imglib2-blog/jupyter/ijava/jshell/java/kernel/2022/06/05/setup-ijava-jupyter-kernel.html"},"url":"https://imglib.github.io/imglib2-blog/jupyter/ijava/jshell/java/kernel/2022/06/05/setup-ijava-jupyter-kernel.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/imglib2-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://imglib.github.io/imglib2-blog/feed.xml" title="ImgLib2 news and tutorials" /><link rel="shortcut icon" type="image/x-icon" href="/imglib2-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
@@ -90,7 +90,7 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Setup the IJava jupyter kernel</h1><p class="page-description">How to install the IJava jupyter kernel</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-06-05T00:00:00-05:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">Setup the IJava jupyter kernel</h1><p class="page-description">Follow these instructions to setup the [IJava jupyter kernel](https://github.com/SpencerPark/IJava) by [Spencer Park](https://github.com/SpencerPark)</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-06-05T00:00:00-05:00" itemprop="datePublished">
         Jun 5, 2022
       </time>• 
           <span itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -126,21 +126,9 @@ window.onload = wrap_img;
     </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <ul id="toc" class="section-nav">
-<li class="toc-entry toc-h1"><a href="#setup-the-ijava-jupyter-kernel">Setup the IJava jupyter kernel</a>
-<ul>
-<li class="toc-entry toc-h2"><a href="#introduction">Introduction</a></li>
-</ul>
-</li>
-</ul><h1 id="setup-the-ijava-jupyter-kernel">
-<a class="anchor" href="#setup-the-ijava-jupyter-kernel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup the IJava jupyter kernel</h1>
+    <h1 id="setup-the-ijava-jupyter-kernel">Setup the IJava jupyter kernel</h1>
 
-<p>Follow these instructions to setup the <a href="https://github.com/SpencerPark/IJava">IJava jupyter kernel</a> by <a href="https://github.com/SpencerPark">Spencer Park</a></p>
-
-<h2 id="introduction">
-<a class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
-
-<p>In this blog, we will show code snippets and examples to make the best use of <a href="https://github.com/imglib/imglib2">ImgLib2</a>, <a href="https://github.com/bigdataviewer/bigdataviewer-core">BigDataViewer</a>, and friends.  ImgLib2 is written to be fast and we will run code that needs to be compiled, so we cannot use any of the various interpreted scripting languages like Python, Groovy, or Javascript.  Instead, we will use the <a href="https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8">JShell tool</a> that you can use directly in a terminal or through <a href="https://github.com/SpencerPark/IJava">Spencer Park’s IJava jupyter kernel</a>.  You can also follow these tutorials in your own Java project and use your preferred IDE, but Jupyter notebooks are a great teaching tool.  Since jupyter is written in Python and most popular with the Python community, let’s follow their ways and first thing create a virtual environment with conda.  The lack of version controlled dependency management for Python projects makes it necessary that practically every project must run in a container or virtual environment because the dependencies of different projects almost inevitably collide.  Conda is the most popular of several attempts to address this situation.  Conda cannot currently be installed from the default Ubuntu repositories, so much about that, but the instructions at [https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html] are tolerable, there is a PPA.  Now let’s create an environment for jupyter:</p>
+<p>In this blog, we will show code snippets and examples to make the best use of <a href="https://github.com/imglib/imglib2">ImgLib2</a>, <a href="https://github.com/bigdataviewer/bigdataviewer-core">BigDataViewer</a>, and friends.  ImgLib2 is written to be fast and we will run code that needs to be compiled, so we cannot use any of the various interpreted scripting languages like Python, Groovy, or Javascript.  Instead, we will use the <a href="https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8">JShell tool</a> that you can use directly in a terminal or through <a href="https://github.com/SpencerPark/IJava">Spencer Park’s IJava jupyter kernel</a>.  You can also follow these tutorials in your own Java project and use your preferred IDE, but Jupyter notebooks are a great teaching tool.  Since jupyter is written in Python and most popular with the Python community, let’s follow their ways and first thing create a virtual environment with conda.  The lack of version controlled dependency management for Python projects makes it necessary that practically every project must run in a container or virtual environment because the dependencies of different projects almost inevitably collide.  Conda is the most popular of several attempts to address this situation.  Conda cannot currently be installed from the default Ubuntu repositories, so much about that, but the <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html">installation instructions</a> are tolerable, there is a PPA.  Now let’s create an environment for jupyter:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda create -n jshell-jupyter python=3
 conda init bash
