@@ -4,6 +4,8 @@ title: About
 permalink: /about/
 ---
 
+# ImgLib2
+
 ImgLib2 is a general-purpose, multidimensional image and data processing library.
 
 It provides a unified API to work with discrete and continuous n-dimensional data.  This API is interface driven and therefore extensible at will.
