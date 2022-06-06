@@ -1,11 +1,16 @@
+---
+toc: true
+layout: post
+branch: master
+badges: true
+author: Stephan Saalfeld
+description: How to install the IJava jupyter kernel
+categories: [jupyter, ijava, jshell, java, kernel]
+title: Setup the IJava jupyter kernel
+---
 # Setup the IJava jupyter kernel
-> Follow these instructions to setup the [IJava juyter kernel](https://github.com/SpencerPark/IJava) by [Spencer Park](https://github.com/SpencerPark)
 
-- toc:true- branch: master
-- badges: true
-- comments: true
-- author: Stephan Saalfeld
-- categories: [jupyter, ijava, jshell, java, kernel]
+Follow these instructions to setup the [IJava jupyter kernel](https://github.com/SpencerPark/IJava) by [Spencer Park](https://github.com/SpencerPark)
 
 ## Introduction
 
