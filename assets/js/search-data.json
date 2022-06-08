@@ -11,6 +11,17 @@
         
     
   
+    
+        ,"post1": {
+            "title": "Title",
+            "content": "Import dependencies. BigDataViewer Vistools is the convenience API that we use to display the results of our experiments and it includes all ImgLib2 related dependencies that we need. . %%loadFromPOM &lt;repository&gt; &lt;id&gt;scijava.public&lt;/id&gt; &lt;url&gt;https://maven.scijava.org/content/groups/public&lt;/url&gt; &lt;/repository&gt; &lt;dependency&gt; &lt;groupId&gt;sc.fiji&lt;/groupId&gt; &lt;artifactId&gt;bigdataviewer-vistools&lt;/artifactId&gt; &lt;version&gt;1.0.0-beta-29&lt;/version&gt; &lt;/dependency&gt; . We define the Juliaset as a function in 2D real space using a BiConsumer lambda. The BiConsumer receives two parameters, the first one (x) is the 2D coordinate, the second one (y) is the target of the function whose value will be set in place, here we use an IntType. We also have to provide a Supplier for instances of the target such that multiple threads can each create their own. . import bdv.util.*; import net.imglib2.position.FunctionRealRandomAccessible; import net.imglib2.type.numeric.integer.IntType; import net.imglib2.util.Intervals; var juliaset = new FunctionRealRandomAccessible&lt;&gt;( 2, (x, y) -&gt; { int i = 0; double v = 0, c = x.getDoublePosition(0), d = x.getDoublePosition(1); for (; i &lt; 127 &amp;&amp; v &lt; 4096; ++i) { final double e = c * c - d * d; d = 2 * c * d; c = e + 0.2; d += 0.6; v = Math.sqrt(c * c + d * d); ++i; } y.set(i); }, IntType::new); . Now we show this function with BigDataViewer. Use your mouse and keyboard to zoom in until you reach the precision limit of double. . BdvFunctions.show( juliaset, Intervals.createMinMax(-1, -1, 1, 1), &quot;&quot;, BdvOptions.options().is2D()).setDisplayRange(0, 127); . Cool? I think so! Now let&#39;s embed one of the two parameters of the Juliaset as a third dimension. The code is almost the same except that we introduce a a variable a. . var juliaset3 = new FunctionRealRandomAccessible&lt;&gt;( 3, (x, y) -&gt; { int i = 0; double v = 0, c = x.getDoublePosition(0), d = x.getDoublePosition(1), a = x.getDoublePosition(2); for (; i &lt; 127 &amp;&amp; v &lt; 4096; ++i) { final double e = c * c - d * d; d = 2 * c * d; c = e + a; d += 0.6; v = Math.sqrt(c * c + d * d); ++i; } y.set(i); }, IntType::new); . And now we show this as a 3D volume in BigDataViewer. You can scroll through the &#39;z&#39;-dimension or arbitrarily slice through the 3D volume. . BdvFunctions.show( juliaset3, Intervals.createMinMax(-1, -1, -1, 1, 1, 1), &quot;Juliaset3&quot;, BdvOptions.options()).setDisplayRange(0, 127); .",
+            "url": "https://imglib.github.io/imglib2-blog/2022/05/02/juliaset-lambda.html",
+            "relUrl": "/2022/05/02/juliaset-lambda.html",
+            "date": " • May 2, 2022"
+        }
+        
+    
+  
 
   
   
