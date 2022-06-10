@@ -16,35 +16,34 @@ conda create -n jshell-jupyter python=3
 conda init bash
 conda activate jshell-jupyter
 conda install jupyter
-conda install openjdk
-conda install -c conda-forge maven
 ```
 
-This may take a day of solving environments, so you may not want to wait for this and use your global Java and Maven installations instead.  The IJava kernel currently does not build with Java 17 or 18, so the easiest at this time is to make it with OpenJDK-11.  If you don't have it yet, install it:
+You will also need a modern Java and Maven on your system, so if you have not yet done so, install it:
 
 ```
-sudo apt install openjdk-11-jdk maven
+sudo apt install openjdk-17-jdk maven
 ```
 
-If you have other versions installed, you can switch between them with the `alternatives` tool:
+The original IJava kernel currently does not build with Java 17 or 18, so we use [Philipp Hanslovsky's](https://github.com/hanslovsky) fork and build and install both the kernel installer and the IJava Jupyter kernel:
 
 ```
-sudo update-alternatives --config java
-sudo update-alternatives --config javac
-```
+git clone https://github.com/hanslovsky/Jupyter-kernel-installer-gradle.git
+cd Jupyter-kernel-installer-gradle/
+git checkout try-upgrade-gradle
+./gradlew publishToMavenLocal
 
-Now check out IJava and build and install the kernel IJava Jupyter kernel following [the installation instructions](https://github.com/SpencerPark/IJava#install-from-source) or:
-
-```
-git clone https://github.com/SpencerPark/IJava.git
+cd ..
+git clone https://github.com/hanslovsky/IJava.git
 cd IJava/
+git checkout hanslovsky/gradle-7.4.2
 ./gradlew installKernel
+```
+
+Now check if the kernel is installed, this should print something like this
+
+```
 jupyter kernelspec list
-```
 
-This should print something like this
-
-```
 Available kernels:
   java       /home/saalfeld/.local/share/jupyter/kernels/java
   python3    /home/saalfeld/anaconda3/envs/jshell-jupyter/share/jupyter/kernels/python3
@@ -79,3 +78,36 @@ mvn compile com.github.johnpoth:jshell-maven-plugin:1.3:run
 
 Happy JShelling!
 
+
+P.S.:
+
+The original IJava kernel currently does not build with Java 17 or 18, so if you prefer this over the above fork, or if you do not care about the latest greatest language features in Java 17, then the easiest at this time is to use OpenJDK-11.  If you don't have it yet, install it via conda:
+
+```
+conda install openjdk
+conda install -c conda-forge maven
+```
+
+However, this may take a day of solving environments, so you can also install it globally:
+
+```
+sudo apt install openjdk-11-jdk maven
+```
+
+If you have other versions installed, you can switch between them with the `alternatives` tool:
+
+```
+sudo update-alternatives --config java
+sudo update-alternatives --config javac
+```
+
+Now check out the original IJava and build and install the kernel IJava Jupyter kernel following [the installation instructions](https://github.com/SpencerPark/IJava#install-from-source) or:
+
+```
+git clone https://github.com/SpencerPark/IJava.git
+cd IJava/
+./gradlew installKernel
+jupyter kernelspec list
+```
+
+Done.
