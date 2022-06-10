@@ -98,7 +98,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      2 min read
+      3 min read
     
 </span></p>
 
@@ -132,32 +132,32 @@ window.onload = wrap_img;
 conda init bash
 conda activate jshell-jupyter
 conda install jupyter
-conda install openjdk
-conda install -c conda-forge maven
 </code></pre></div></div>
 
-<p>This may take a day of solving environments, so you may not want to wait for this and use your global Java and Maven installations instead.  The IJava kernel currently does not build with Java 17 or 18, so the easiest at this time is to make it with OpenJDK-11.  If you don’t have it yet, install it:</p>
+<p>You will also need a modern Java and Maven on your system, so if you have not yet done so, install it:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install openjdk-11-jdk maven
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install openjdk-17-jdk maven
 </code></pre></div></div>
 
-<p>If you have other versions installed, you can switch between them with the <code class="language-plaintext highlighter-rouge">alternatives</code> tool:</p>
+<p>The original IJava kernel currently does not build with Java 17 or 18, so we use <a href="https://github.com/hanslovsky">Philipp Hanslovsky’s</a> fork and build and install both the kernel installer and the IJava Jupyter kernel:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo update-alternatives --config java
-sudo update-alternatives --config javac
-</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/hanslovsky/Jupyter-kernel-installer-gradle.git
+cd Jupyter-kernel-installer-gradle/
+git checkout try-upgrade-gradle
+./gradlew publishToMavenLocal
 
-<p>Now check out IJava and build and install the kernel IJava Jupyter kernel following <a href="https://github.com/SpencerPark/IJava#install-from-source">the installation instructions</a> or:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/SpencerPark/IJava.git
+cd ..
+git clone https://github.com/hanslovsky/IJava.git
 cd IJava/
+git checkout hanslovsky/gradle-7.4.2
 ./gradlew installKernel
-jupyter kernelspec list
 </code></pre></div></div>
 
-<p>This should print something like this</p>
+<p>Now check if the kernel is installed, this should print something like this</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Available kernels:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jupyter kernelspec list
+
+Available kernels:
   java       /home/saalfeld/.local/share/jupyter/kernels/java
   python3    /home/saalfeld/anaconda3/envs/jshell-jupyter/share/jupyter/kernels/python3
 </code></pre></div></div>
@@ -188,6 +188,34 @@ jupyter kernelspec list
 
 <p>Happy JShelling!</p>
 
+<p>P.S.:</p>
+
+<p>The original IJava kernel currently does not build with Java 17 or 18, so if you prefer this over the above fork, or if you do not care about the latest greatest language features in Java 17, then the easiest at this time is to use OpenJDK-11.  If you don’t have it yet, install it via conda:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda install openjdk
+conda install -c conda-forge maven
+</code></pre></div></div>
+
+<p>However, this may take a day of solving environments, so you can also install it globally:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install openjdk-11-jdk maven
+</code></pre></div></div>
+
+<p>If you have other versions installed, you can switch between them with the <code class="language-plaintext highlighter-rouge">alternatives</code> tool:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo update-alternatives --config java
+sudo update-alternatives --config javac
+</code></pre></div></div>
+
+<p>Now check out the original IJava and build and install the kernel IJava Jupyter kernel following <a href="https://github.com/SpencerPark/IJava#install-from-source">the installation instructions</a> or:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/SpencerPark/IJava.git
+cd IJava/
+./gradlew installKernel
+jupyter kernelspec list
+</code></pre></div></div>
+
+<p>Done.</p>
 
   </div><a class="u-url" href="/imglib2-blog/jupyter/ijava/jshell/java/kernel/2022/06/05/setup-ijava-jupyter-kernel.html" hidden></a>
 </article>
