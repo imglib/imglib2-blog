@@ -1,0 +1,211 @@
+---
+aliases:
+- /imglib2/stream-api/java/2022/10/30/streams
+author: Tobias Pietzsch
+badges: true
+branch: master
+categories:
+- imglib2
+- stream-api
+- java
+date: '2022-10-30'
+description: Examples and performance discussion of Java Streams in ImgLib2
+output-file: 2022-10-30-streams.html
+title: Adding Stream support to ImgLib2
+toc: true
+format:
+  html:
+    code-tools: false
+---
+
+(first posted at [image.sc](https://forum.image.sc/t/adding-stream-support-to-imglib2/88078))
+
+# Adding Stream support to ImgLib2
+
+The recently released [imglib2-6.3.0](https://maven.scijava.org/#nexus-search;gav~net.imglib2~imglib2~6.3.0~~) adds support for Java Streams.
+
+## Access Img pixels as a Stream
+
+The first addition is that every `IterableRealInterval<T>` (and sub-classes like `IterableInterval`, `Img`, ...) can now provide (sequential or parallel) streams over its elements.
+
+```java
+public interface IterableRealInterval<T> extends RealInterval, Iterable<T> {
+    ...
+    Stream<T> stream();
+    Stream<T> parallelStream();
+}
+```
+
+This is entirely equivalent to `java.util.Collection`
+```java
+public interface Collection<T> extends Iterable<T> {
+    ...
+    Stream<T> stream();
+    Stream<T> parallelStream();
+}
+```
+and allows to operate on pixel values.
+
+Encounter order of the streams is always compatible with `cursor()`. That is, `Views.flatIterable(img).stream()` yields elements in flat iteration order.
+
+Streams can be used, for example, to set all pixels of an `Img` to some `value`: 
+```java
+static <T extends Type<T>> void fill(Img<T> img, T value) {
+    
+    img.stream().forEach(t->t.set(value));
+}
+```
+to compute the sum of all values in an `Img`:
+```java
+static double sum(Img<DoubleType> img) {
+
+    return img.stream()
+            .mapToDouble(DoubleType::get)
+            .sum();
+}
+```
+or to find the maximum value in an `Img`:
+```java
+static double max(Img<DoubleType> img) {
+
+    return img.stream()
+            .mapToDouble(DoubleType::get)
+            .max().getAsDouble();
+}
+```
+In particular the latter two examples, where the terminal operation is some form of reduction, allow for more convenient parallelization than the alternatives. Computing the maximum value in parallel is as simple as 
+```java
+static double max(Img<DoubleType> img) {
+
+    return img.parallelStream()
+            .mapToDouble(DoubleType::get)
+            .max().getAsDouble();
+}
+```
+Doing the same with `LoopBuilder` currently requires to parallelize over chunks, collect partial results into mutable holder objects, and implement the reduction of partial results into the final result.
+
+
+## Access Img values *and positions* as a Stream
+A stream of only pixel values, without access to their positions is rather limiting. For example, we would often be interested in the location of the image maximum, not only the value. To achieve this, there is a new utility class `net.imglib2.stream.Streams`, with methods
+```java
+public static <T> Stream<RealLocalizableSampler<T>> localizable(IterableRealInterval<T> interval)
+public static <T> Stream<RealLocalizableSampler<T>> localizing(IterableRealInterval<T> interval)
+public static <T> Stream<LocalizableSampler<T>> localizable(IterableInterval<T> interval)
+public static <T> Stream<LocalizableSampler<T>> localizing(IterableInterval<T> interval)
+```
+that allow to create Streams of `LocalizableSampler<T>` of the pixels of an `IterableInterval` (and analogous for `IterableRealInterval`). You can think of `LocalizableSampler<T>` as a `Cursor<T>` which cannot be moved, which is more or less what the default implementation does under the hood.
+
+The `localizable` and `localizing` variants are analogous to `cursor()` and `localizingCursor()` The Stream returned by `localizable` computes element locations only when asked to (with potentially higher per-element cost). The Stream returned by `localizing` tracks element locations always (in general faster, but potentially unnecessary).
+
+For example, to fill image pixels with position-dependent values, we would use `localizing`, because we require the position of each element.
+```java
+static void fractal() {
+    
+    Img<UnsignedByteType> img = ArrayImgs.unsignedBytes(1000, 1000);
+    Streams.localizing(img)
+            .parallel()
+            .forEach(s -> s.get().set(
+                    mandelbrot(
+                            (s.getDoublePosition(0) - 800) / 500,
+                            (s.getDoublePosition(1) - 500) / 500)
+            ));
+    BdvFunctions.show(img, "mandelbrot", Bdv.options().is2D());
+}
+```
+![image|616x500](mandelbrot.jpg)
+
+Conversely, to compute the maximum value and its location in an image, we would use `localizable`, because we only ask for the position of one element (the maximum).
+```java
+static void printMax(Img<IntType> img) {
+
+    Optional<LocalizableSampler<IntType>> optionalMax =
+            Streams.localizable(img)
+                    .parallel()
+                    .map(LocalizableSampler::copy)
+                    .max(Comparator.comparingInt(c -> c.get().get()));
+    LocalizableSampler<IntType> max = optionalMax.get();
+    System.out.println("max position = " + Util.printCoordinates(max));
+    System.out.println("max value = " + max.get().getInteger());
+}
+```
+(In both cases, it is fine to chose the respectively other variant with no change in behaviour, and only limited performance impact.)
+
+## Pitfalls
+
+The `T` elements of the stream are proxies that are re-used, as usual in ImgLib2. Explicit copying operations must be added if stream elements are supposed to be retained (by stateful intermediate or terminal operations).
+
+For example, to collect all `DoubleType` values between `0` and `1` into a list:
+```java
+List< DoubleType > values = img.stream()
+    .filter( t -> t.get() >= 0.0 && t.get() <= 1.0 )
+    .map( DoubleType::copy ) // <-- this is important!
+    .collect( Collectors.toList() );
+```
+The `.map(DoubleType::copy)` operation is necessary, otherwise the `values` list will contain many duplicates of the same (re-used proxy) `DoubleType` instance. The copy could also be done before the `.filter(...)` operation, but it's better to do it as late as possible to avoid unnecessary creation of objects.
+
+Likewise, the `.map(LocalizableSampler::copy)` in the `printMax()` example above is required. There is [ongoing work](https://github.com/orgs/imglib/projects/1/views/1?pane=issue&itemId=38384066) to reduce the necessity of explicit copy operations. For example, in the `printMax()` example, the `.max()` operation of the stream could be overridden to only copy when a new maximum candidate is encountered.
+
+Note, that already the current implementation takes care not to re-use proxies across parallel execution, so threads of a `parallelStream()` will not interfere.
+
+## Implementation details
+* Both, pure-value streams and value-and-position streams make use of `LocalizableSpliterator<T>`. `LocalizableSpliterator<T>` extends `Spliterator` and `Localizable`, similiar to `Cursor` extending `Iterator` and `Localizable`. 
+* There are default `LocalizableSpliterator<T>` (and `RealLocalizableSpliterator<T>`) implementations based on `Cursor<T>` (and `RealCursor<T>`). Therefore, the new streams API works for every `IterableRealInterval`, without the need to touch existing implementations.
+* Additionally, the standard `Img` classes have custom `LocalizableSpliterator<T>`, that leverage knowledge of underlying storage for improved performance.
+
+
+## Performance
+It's complicated...
+
+One the one hand, there comes considerable performance overhead in replacing simple loops with stream operations. This has nothing to do with ImgLib2, it is just a "feature" of the underlying machinery. This can be observed for example by benchmarking looping over an `int[]` array:
+```java
+int[] values = new int[4_000_000];
+
+@Benchmark
+public long benchmarkForLoopArray() {
+    long count = 0;
+    for (int value : values) {
+        if (value > 127)
+            ++count;
+    }
+    return count;
+}
+
+@Benchmark
+public long benchmarkStreamArray() {
+    return IntStream.of(values).filter(value -> value > 127).count();
+}
+```
+The result is
+```
+Benchmark                                          Mode  Cnt   Score   Error  Units
+ArrayStreamBenchmark.benchmarkForLoopArray         avgt   15   2,563 ± 0,026  ms/op
+ArrayStreamBenchmark.benchmarkStreamArray          avgt   15  11,052 ± 0,022  ms/op
+```
+That is, the Stream version is > 4 times slower. Equivalent performance overhead often can be observed in ImgLib2, when replacing `Cursor` based loops with Stream operations.
+
+On the other hand, custom Spliterator implementations sometimes benefit more than cursors from tuning to the underlying storage. (Because iteration is "internal" with the spliterator, while the cursor must return control to the caller after every visited element.) For example, consider the following benchmark method (equivalent code for other variations omitted, see [github](https://github.com/imglib/imglib2/blob/dbade5c32a6900145e578ebde0efc12e7a35c436/src/test/java/net/imglib2/stream/LocalizableSamplerStreamBenchmark.java) for full details):
+```java
+@Benchmark
+public long benchmarkStream() {
+    long sum = Streams.localizable(img)
+            .mapToLong(s -> s.get().get()
+                    + s.getIntPosition(0)
+                    + s.getIntPosition(1)
+                    + s.getIntPosition(2)
+            ).sum();
+    return sum;
+}
+```
+The result looks like
+```
+Benchmark                                                            (imgType)  Mode  Cnt   Score   Error  Units
+LocalizableSamplerStreamBenchmark.benchmarkCursor                     ArrayImg  avgt   15  10,097 ± 0,046  ms/op
+LocalizableSamplerStreamBenchmark.benchmarkLocalizingCursor           ArrayImg  avgt   15   3,846 ± 0,020  ms/op
+LocalizableSamplerStreamBenchmark.benchmarkLocalizingStream           ArrayImg  avgt   15   3,337 ± 0,027  ms/op
+LocalizableSamplerStreamBenchmark.benchmarkLocalizingParallelStream   ArrayImg  avgt   15   0,962 ± 0,583  ms/op
+```
+That is, the performance difference between localizing and non-localizing Cursors is much more pronounced than the difference between Cursor loop and Stream. In fact, the Stream version is even faster than the localizingCursor version. On top of that, it is trivial to parallelize.
+
+Finally, we did not investigate polymorphism effects so far. It is very much possible that this affects performance and we may have to investigate employing `LoopBuilder`s class-copying mechanism to counter these effects.
+
+In summary, I think one should not hesitate to use Streams where it makes sense from a readability and ease-of-use perspective. If performance is a critical concern, it is best to benchmark various approaches, because the behaviour is not easy to predict.
