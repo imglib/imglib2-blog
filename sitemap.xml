@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url>
-<loc>https://imglib.github.io/imglib2-blog/imglib2/lambda/fractal/juliaset/bigdataviewer/2022/05/02/juliaset-lambda.html</loc>
-<lastmod>2022-05-02T00:00:00-05:00</lastmod>
-</url>
-<url>
-<loc>https://imglib.github.io/imglib2-blog/jupyter/ijava/jshell/java/kernel/2022/06/05/setup-ijava-jupyter-kernel.html</loc>
-<lastmod>2022-06-05T00:00:00-05:00</lastmod>
-</url>
-<url>
-<loc>https://imglib.github.io/imglib2-blog/ui-behaviour/bigdataviewer/2022/08/08/keymaps.html</loc>
-<lastmod>2022-08-08T00:00:00-05:00</lastmod>
-</url>
-<url>
-<loc>https://imglib.github.io/imglib2-blog/imglib2/jupyter/notebook/2022/09/14/how-to-display-imglib2-data.html</loc>
-<lastmod>2022-09-14T00:00:00-05:00</lastmod>
-</url>
-<url>
-<loc>https://imglib.github.io/imglib2-blog/imglib2/n5/hdf5/zarr/jupyter/notebook/2022/09/27/n5-imglib2.html</loc>
-<lastmod>2022-09-27T00:00:00-05:00</lastmod>
-</url>
-<url>
-<loc>https://imglib.github.io/imglib2-blog/about/</loc>
-</url>
-<url>
-<loc>https://imglib.github.io/imglib2-blog/</loc>
-</url>
-<url>
-<loc>https://imglib.github.io/imglib2-blog/search/</loc>
-</url>
-<url>
-<loc>https://imglib.github.io/imglib2-blog/categories/</loc>
-</url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2022-09-04-how-to-display-imglib2-data.html</loc>
+    <lastmod>2024-02-13T01:46:46.818Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2022-08-08-keymaps.html</loc>
+    <lastmod>2024-02-13T01:46:46.814Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2022-09-27-n5-imglib2.html</loc>
+    <lastmod>2024-02-13T01:46:46.818Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/about.html</loc>
+    <lastmod>2024-02-13T01:52:06.777Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/index.html</loc>
+    <lastmod>2024-02-13T01:52:47.681Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2022-05-02-juliaset-lambda.html</loc>
+    <lastmod>2024-02-13T01:46:46.814Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2022-06-05-setup-ijava-jupyter-kernel.html</loc>
+    <lastmod>2024-02-13T01:46:46.818Z</lastmod>
+  </url>
 </urlset>

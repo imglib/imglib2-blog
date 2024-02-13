@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Stephan Saalfeld">
+<meta name="dcterms.date" content="2022-06-05">
+<meta name="description" content="Follow these instructions to setup the IJava jupyter kernel by Spencer Park.">
 
-<title>ImgLib2 news and tutorials</title>
+<title>ImgLib2 news and tutorials - Setup the IJava jupyter kernel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,28 +23,60 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./favicon.ico" rel="icon">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,80 +104,22 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./imglib2-logo-header.png" alt="" class="navbar-logo">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../imglib2-logo-header.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">ImgLib2 news and tutorials</span>
     </a>
   </div>
@@ -153,7 +130,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">ImgLib2</span></a>
   </li>  
   <li class="nav-item compact">
@@ -174,242 +151,116 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">Setup the IJava jupyter kernel</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://github.com/imglib/imglib2-blog/blob/main/posts/2022-06-05-setup-ijava-jupyter-kernel.md"><i class="bi"></i> Code</button></div></div>
+                  <div>
+        <div class="description">
+          Follow these instructions to setup the IJava jupyter kernel by Spencer Park.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">jupyter</div>
+                <div class="quarto-category">ijava</div>
+                <div class="quarto-category">jshell</div>
+                <div class="quarto-category">java</div>
+                <div class="quarto-category">kernel</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Stephan Saalfeld </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 5, 2022</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(5)</span></div><div class="category" data-category="bigdataviewer">bigdataviewer <span class="quarto-category-count">(2)</span></div><div class="category" data-category="fractal">fractal <span class="quarto-category-count">(1)</span></div><div class="category" data-category="hdf5">hdf5 <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ijava">ijava <span class="quarto-category-count">(1)</span></div><div class="category" data-category="imglib2">imglib2 <span class="quarto-category-count">(3)</span></div><div class="category" data-category="java">java <span class="quarto-category-count">(1)</span></div><div class="category" data-category="jshell">jshell <span class="quarto-category-count">(1)</span></div><div class="category" data-category="juliaset">juliaset <span class="quarto-category-count">(1)</span></div><div class="category" data-category="jupyter">jupyter <span class="quarto-category-count">(3)</span></div><div class="category" data-category="kernel">kernel <span class="quarto-category-count">(1)</span></div><div class="category" data-category="lambda">lambda <span class="quarto-category-count">(1)</span></div><div class="category" data-category="n5">n5 <span class="quarto-category-count">(1)</span></div><div class="category" data-category="notebook">notebook <span class="quarto-category-count">(2)</span></div><div class="category" data-category="ui-behaviour">ui-behaviour <span class="quarto-category-count">(1)</span></div><div class="category" data-category="zarr">zarr <span class="quarto-category-count">(1)</span></div></div></div>
+    
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<p>In this blog, we will show code snippets and examples to make the best use of <a href="https://github.com/imglib/imglib2">ImgLib2</a>, <a href="https://github.com/bigdataviewer/bigdataviewer-core">BigDataViewer</a>, and friends. ImgLib2 is written to be fast and we will run code that needs to be compiled, so we cannot use any of the various interpreted scripting languages like Python, Groovy, or Javascript. Instead, we will use the <a href="https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8">JShell tool</a> that you can use directly in a terminal or through <a href="https://github.com/SpencerPark/IJava">Spencer Park’s IJava jupyter kernel</a>. You can also follow these tutorials in your own Java project and use your preferred IDE, but Jupyter notebooks are a great teaching tool. Since jupyter is written in Python and most popular with the Python community, let’s follow their ways and first thing create a virtual environment with conda. The lack of version controlled dependency management for Python projects makes it necessary that practically every project must run in a container or virtual environment because the dependencies of different projects almost inevitably collide. Conda is the most popular of several attempts to address this situation. Conda cannot currently be installed from the default Ubuntu repositories, so much about that, but the <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html">installation instructions</a> are tolerable, there is a PPA. Now let’s create an environment for jupyter:</p>
+<pre><code>conda create -n jshell-jupyter python=3
+conda init bash
+conda activate jshell-jupyter
+conda install jupyter</code></pre>
+<p>You will also need a modern Java and Maven on your system, so if you have not yet done so, install it:</p>
+<pre><code>sudo apt install openjdk-17-jdk maven</code></pre>
+<p>The original IJava kernel currently does not build with Java 17 or 18, so we use <a href="https://github.com/hanslovsky">Philipp Hanslovsky’s</a> fork and build and install both the kernel installer and the IJava Jupyter kernel:</p>
+<pre><code>git clone https://github.com/hanslovsky/Jupyter-kernel-installer-gradle.git
+cd Jupyter-kernel-installer-gradle/
+git checkout try-upgrade-gradle
+./gradlew publishToMavenLocal
+
+cd ..
+git clone https://github.com/hanslovsky/IJava.git
+cd IJava/
+git checkout hanslovsky/gradle-7.4.2
+./gradlew installKernel</code></pre>
+<p>Now check if the kernel is installed, this should print something like this</p>
+<pre><code>jupyter kernelspec list
+
+Available kernels:
+  java       /home/saalfeld/.local/share/jupyter/kernels/java
+  python3    /home/saalfeld/anaconda3/envs/jshell-jupyter/share/jupyter/kernels/python3</code></pre>
+<p>You can now start the jupyter notebook server</p>
+<pre><code>jupyter notebook --kernel=java</code></pre>
+<p>And experiment with the examples. <a href="https://github.com/SpencerPark/IJava">Spencer Park’s IJava jupyter kernel</a> makes it very easy to include dependencies. You can include the relevant snippets from a Maven POM into a tagged code block, e.g.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>%%loadFromPOM</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">repository</span>&gt;</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">id</span>&gt;scijava.public&lt;/<span class="kw">id</span>&gt;</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">url</span>&gt;https://maven.scijava.org/content/groups/public&lt;/<span class="kw">url</span>&gt;</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">repository</span>&gt;</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dependency</span>&gt;</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">groupId</span>&gt;sc.fiji&lt;/<span class="kw">groupId</span>&gt;</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">artifactId</span>&gt;bigdataviewer-vistools&lt;/<span class="kw">artifactId</span>&gt;</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">version</span>&gt;1.0.0-beta-29&lt;/<span class="kw">version</span>&gt;</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">dependency</span>&gt;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If you prefer to run <a href="https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8">JShell</a> directly, you can pull in the dependencies from a complete Maven POM with John Pooth’s Maven Jshell plugin</p>
+<pre><code>mvn compile com.github.johnpoth:jshell-maven-plugin:1.3:run</code></pre>
+<p>Happy JShelling!</p>
+<p>P.S.:</p>
+<p>The original IJava kernel currently does not build with Java 17 or 18, so if you prefer this over the above fork, or if you do not care about the latest greatest language features in Java 17, then the easiest at this time is to use OpenJDK-11. If you don’t have it yet, install it via conda:</p>
+<pre><code>conda install openjdk
+conda install -c conda-forge maven</code></pre>
+<p>However, this may take a day of solving environments, so you can also install it globally:</p>
+<pre><code>sudo apt install openjdk-11-jdk maven</code></pre>
+<p>If you have other versions installed, you can switch between them with the <code>alternatives</code> tool:</p>
+<pre><code>sudo update-alternatives --config java
+sudo update-alternatives --config javac</code></pre>
+<p>Now check out the original IJava and build and install the kernel IJava Jupyter kernel following <a href="https://github.com/SpencerPark/IJava#install-from-source">the installation instructions</a> or:</p>
+<pre><code>git clone https://github.com/SpencerPark/IJava.git
+cd IJava/
+./gradlew installKernel
+jupyter kernelspec list</code></pre>
+<p>Done.</p>
 
 
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="imglib2,n5,hdf5,zarr,jupyter,notebook" data-listing-date-sort="1664251200000" data-listing-file-modified-sort="1707788806818" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="343">
-<div class="thumbnail">
-<p><a href="./posts/2022-09-27-n5-imglib2.html" class="no-external"></a></p><a href="./posts/2022-09-27-n5-imglib2.html" class="no-external">
-<p class="card-img-top"><img src="posts/2022-09-27-n5-imglib2_files/figure-html/cell-5-output-3.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="./posts/2022-09-27-n5-imglib2.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2022-09-27-n5-imglib2.html" class="no-external">How to work with the N5 API and ImgLib2?</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2022-09-27-n5-imglib2.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('imglib2'); return false;">
-imglib2
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('n5'); return false;">
-n5
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('hdf5'); return false;">
-hdf5
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('zarr'); return false;">
-zarr
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('jupyter'); return false;">
-jupyter
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('notebook'); return false;">
-notebook
-</div>
-</div>
-<div class="listing-description">
-<a href="./posts/2022-09-27-n5-imglib2.html" class="no-external">Read and write ImgLib2 data with the N5 API</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2022-09-27-n5-imglib2.html" class="no-external">
-<div class="listing-date">
-Sep 27, 2022
-</div>
-<div class="listing-author">
-Stephan Saalfeld
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="imglib2,jupyter,notebook" data-listing-date-sort="1663128000000" data-listing-file-modified-sort="1707788806818" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="537">
-<div class="thumbnail">
-<p><a href="./posts/2022-09-04-how-to-display-imglib2-data.html" class="no-external"></a></p><a href="./posts/2022-09-04-how-to-display-imglib2-data.html" class="no-external">
-<p class="card-img-top"><img src="posts/2022-09-14-how-to-display-imglib2-data_files/figure-html/cell-3-output-1.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="./posts/2022-09-04-how-to-display-imglib2-data.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2022-09-04-how-to-display-imglib2-data.html" class="no-external">How to display ImgLib2 data in a notebook?</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2022-09-04-how-to-display-imglib2-data.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('imglib2'); return false;">
-imglib2
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('jupyter'); return false;">
-jupyter
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('notebook'); return false;">
-notebook
-</div>
-</div>
-<div class="listing-description">
-<a href="./posts/2022-09-04-how-to-display-imglib2-data.html" class="no-external">Render ImgLib2 data into notebook objects</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2022-09-04-how-to-display-imglib2-data.html" class="no-external">
-<div class="listing-date">
-Sep 14, 2022
-</div>
-<div class="listing-author">
-Stephan Saalfeld
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="ui-behaviour,bigdataviewer" data-listing-date-sort="1659931200000" data-listing-file-modified-sort="1707788806814" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1954">
-<div class="thumbnail">
-<p><a href="./posts/2022-08-08-keymaps.html" class="no-external"></a></p><a href="./posts/2022-08-08-keymaps.html" class="no-external">
-<p class="card-img-top"><img src="posts/keymap_imgs/hello.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="./posts/2022-08-08-keymaps.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2022-08-08-keymaps.html" class="no-external">User-configurable Keymaps</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2022-08-08-keymaps.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('ui-behaviour'); return false;">
-ui-behaviour
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('bigdataviewer'); return false;">
-bigdataviewer
-</div>
-</div>
-<div class="listing-description">
-<a href="./posts/2022-08-08-keymaps.html" class="no-external">How to set up user-configurable keyboard shortcuts using <code>ui-behaviour</code> and BigDataViewer’s Preferences Dialog</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2022-08-08-keymaps.html" class="no-external">
-<div class="listing-date">
-Aug 8, 2022
-</div>
-<div class="listing-author">
-Tobias Pietzsch
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="jupyter,ijava,jshell,java,kernel" data-listing-date-sort="1654401600000" data-listing-file-modified-sort="1707788806818" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="534">
-<div class="thumbnail">
-<p><a href="./posts/2022-06-05-setup-ijava-jupyter-kernel.html" class="no-external"></a></p><a href="./posts/2022-06-05-setup-ijava-jupyter-kernel.html" class="no-external">
-<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
-</a><p><a href="./posts/2022-06-05-setup-ijava-jupyter-kernel.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2022-06-05-setup-ijava-jupyter-kernel.html" class="no-external">Setup the IJava jupyter kernel</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2022-06-05-setup-ijava-jupyter-kernel.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('jupyter'); return false;">
-jupyter
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('ijava'); return false;">
-ijava
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('jshell'); return false;">
-jshell
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('java'); return false;">
-java
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('kernel'); return false;">
-kernel
-</div>
-</div>
-<div class="listing-description">
-<a href="./posts/2022-06-05-setup-ijava-jupyter-kernel.html" class="no-external">Follow these instructions to setup the IJava jupyter kernel by Spencer Park.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2022-06-05-setup-ijava-jupyter-kernel.html" class="no-external">
-<div class="listing-date">
-Jun 5, 2022
-</div>
-<div class="listing-author">
-Stephan Saalfeld
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="imglib2,lambda,fractal,juliaset,bigdataviewer" data-listing-date-sort="1651464000000" data-listing-file-modified-sort="1707788806814" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="212">
-<div class="thumbnail">
-<p><a href="./posts/2022-05-02-juliaset-lambda.html" class="no-external"></a></p><a href="./posts/2022-05-02-juliaset-lambda.html" class="no-external">
-<p class="card-img-top"><img src="posts/2022-05-02-juliaset-lambda_files/figure-html/cell-6-output-1.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="./posts/2022-05-02-juliaset-lambda.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2022-05-02-juliaset-lambda.html" class="no-external">Juliaset Lambda</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2022-05-02-juliaset-lambda.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('imglib2'); return false;">
-imglib2
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('lambda'); return false;">
-lambda
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('fractal'); return false;">
-fractal
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('juliaset'); return false;">
-juliaset
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('bigdataviewer'); return false;">
-bigdataviewer
-</div>
-</div>
-<div class="listing-description">
-<a href="./posts/2022-05-02-juliaset-lambda.html" class="no-external">Interactively render the Juliaset as a lambda function in BigDataViewer</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2022-05-02-juliaset-lambda.html" class="no-external">
-<div class="listing-date">
-May 2, 2022
-</div>
-<div class="listing-author">
-Stephan Saalfeld
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -489,6 +340,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
