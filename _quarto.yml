@@ -1,0 +1,25 @@
+project:
+  type: website
+
+website:
+  title: "ImgLib2 news and tutorials"
+  image: imglib2-logo-social.png
+  favicon: favicon.ico
+  navbar:
+    logo: imglib2-logo-header.png
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/imglib
+      - icon: mastodon
+        href: https://fosstodon.org/@imglib2
+  repo-url: https://github.com/imglib/imglib2-blog
+format:
+  html:
+    theme: cosmo 
+    css: styles.css
+    code-fold: show
+    code-overflow: wrap
+    code-tools:
+      source: repo
+
