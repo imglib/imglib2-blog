@@ -10,10 +10,10 @@
 <atom:link href="https://imglib.github.io/imglib2-blog/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <image>
-<url>https://imglib.github.io/imglib2-blog/imglib2-logo-social.png</url>
+<url>https://imglib.github.io/imglib2-blog/imglib2-logo.png</url>
 <title>ImgLib2 news and tutorials</title>
 <link>https://imglib.github.io/imglib2-blog/</link>
-<height>72</height>
+<height>165</height>
 <width>144</width>
 </image>
 <generator>quarto-1.4.549</generator>
