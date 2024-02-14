@@ -6,6 +6,8 @@ listing:
   categories: true
   sort-ui: false
   filter-ui: false
+  feed:
+    type: partial
 page-layout: full
 title-block-banner: false
 format:
