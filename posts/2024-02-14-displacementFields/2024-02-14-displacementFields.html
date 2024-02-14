@@ -8,7 +8,7 @@
 
 <meta name="author" content="John Bogovic">
 <meta name="dcterms.date" content="2024-02-14">
-<meta name="description" content="Create and apply non-linear transformations with imglib2.">
+<meta name="description" content="Create and apply non-linear transformations with Imglib2.">
 
 <title>ImgLib2 news and tutorials - Position and displacement field transforms</title>
 <style>
@@ -137,7 +137,7 @@ window.Quarto = {
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="ImgLib2 news and tutorials - Position and displacement field transforms">
-<meta property="og:description" content="Create and apply non-linear transformations with imglib2.">
+<meta property="og:description" content="Create and apply non-linear transformations with Imglib2.">
 <meta property="og:image" content="https://imglib.github.io/imglib2-blog/posts/2024-02-14-displacementFields/imglib2-logo.png">
 <meta property="og:site_name" content="ImgLib2 news and tutorials">
 </head>
@@ -195,11 +195,11 @@ window.Quarto = {
       <div class="quarto-title-block"><div><h1 class="title">Position and displacement field transforms</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button" data-quarto-source-url="https://github.com/imglib/imglib2-blog/blob/main/posts/2024-02-14-displacementFields/2024-02-14-displacementFields.ipynb">View Source</a></li></ul></div></div>
                   <div>
         <div class="description">
-          Create and apply non-linear transformations with imglib2.
+          Create and apply non-linear transformations with Imglib2.
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">imglib2</div>
+                <div class="quarto-category">Imglib2</div>
                 <div class="quarto-category">transform</div>
                 <div class="quarto-category">deformation</div>
                 <div class="quarto-category">displacement</div>
@@ -239,7 +239,7 @@ window.Quarto = {
 
 
 
-<p>This post shows how to create and apply non-linear transformations with imglib2, specifically using <code>DisplacementFieldTransform</code>s and <code>PositionFieldTransform</code>s.</p>
+<p>This post shows how to create and apply non-linear transformations with Imglib2, specifically using <a href="https://github.com/imglib/imglib2-realtransform/blob/cd3bc38ea81e324ac0dbab38e21e65cdfdbe1288/src/main/java/net/imglib2/realtransform/DisplacementFieldTransform.java#L61"><code>DisplacementFieldTransform</code></a>s and <a href="https://github.com/imglib/imglib2-realtransform/blob/cd3bc38ea81e324ac0dbab38e21e65cdfdbe1288/src/main/java/net/imglib2/realtransform/PositionFieldTransform.java#L64"><code>PositionFieldTransform</code></a>s.</p>
 <p>The last example of this post will show how to use a <code>PositionFieldTransform</code> to create a 2D image from a 1D signal by a transformation of coordinates.</p>
 <table class="table">
 <colgroup>
@@ -646,21 +646,22 @@ window.Quarto = {
 (9999.0,9999.0) → (1.0,2.0)</code></pre>
 </div>
 </div>
-<p>The <code>Localizables</code> class has some convenience methods for producing images of coordinates. Creating a position field with this image gives the identity. <code>FunctionRandomAccessible</code>s can also be used to generate coordinate images.</p>
+<p>The <a href="https://javadoc.scijava.org/ImgLib2/net/imglib2/util/Localizables.html"><code>Localizables</code></a> class has some convenience methods for producing images of coordinates. Creating a position field with this image gives the identity. <a href="https://javadoc.scijava.org/ImgLib2/net/imglib2/position/FunctionRandomAccessible.html"><code>FunctionRandomAccessible</code></a>s can also be used to generate coordinate images.</p>
+<p><em>Challenge:</em> Try using <a href="https://javadoc.scijava.org/ImgLib2/net/imglib2/converter/Converters.html"><code>Converters</code></a> to extract the x and y coordinates from the <code>coordinates</code> variable.</p>
 <div id="0c9d92bd" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">// make an image of coordinates</span></span>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">// make an image of coordinates. The argument "2" specifies the number of dimensions.</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> coordinates <span class="op">=</span> Localizables<span class="op">.</span><span class="fu">realRandomAccessible</span><span class="op">(</span><span class="dv">2</span><span class="op">);</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">// extract the x coordinate</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">// make an image whose intensities are the x coordinate</span></span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> xCoordinates <span class="op">=</span> Views<span class="op">.</span><span class="fu">interval</span><span class="op">(</span></span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">new</span> FunctionRandomAccessible<span class="op">&lt;&gt;(</span> <span class="dv">2</span><span class="op">,</span></span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">(</span>x<span class="op">,</span> v<span class="op">)</span> <span class="op">-&gt;</span> <span class="op">{</span> v<span class="op">.</span><span class="fu">set</span><span class="op">(</span> x<span class="op">.</span><span class="fu">getIntPosition</span><span class="op">(</span><span class="dv">0</span><span class="op">));</span> <span class="op">},</span> </span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        UnsignedByteType<span class="op">::</span><span class="kw">new</span> <span class="op">),</span></span>
 <span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">new</span> <span class="fu">FinalInterval</span><span class="op">(</span><span class="dv">255</span><span class="op">,</span> <span class="dv">255</span><span class="op">));</span></span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co">// extract the y coordinate</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co">// make an image whose intensities are the x coordinate</span></span>
 <span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> yCoordinates <span class="op">=</span> Views<span class="op">.</span><span class="fu">interval</span><span class="op">(</span></span>
 <span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">new</span> FunctionRandomAccessible<span class="op">&lt;&gt;(</span> <span class="dv">2</span><span class="op">,</span></span>
 <span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>        <span class="op">(</span>x<span class="op">,</span> v<span class="op">)</span> <span class="op">-&gt;</span> <span class="op">{</span> v<span class="op">.</span><span class="fu">set</span><span class="op">(</span> x<span class="op">.</span><span class="fu">getIntPosition</span><span class="op">(</span> <span class="dv">1</span> <span class="op">));</span> <span class="op">},</span> </span>

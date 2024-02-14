@@ -22,8 +22,8 @@
   <title>Position and displacement field transforms</title>
   <dc:creator>John Bogovic</dc:creator>
   <link>https://imglib.github.io/imglib2-blog/posts/2024-02-14-displacementFields/2024-02-14-displacementFields.html</link>
-  <description><![CDATA[ Create and apply non-linear transformations with imglib2. ]]></description>
-  <category>imglib2</category>
+  <description><![CDATA[ Create and apply non-linear transformations with Imglib2. ]]></description>
+  <category>Imglib2</category>
   <category>transform</category>
   <category>deformation</category>
   <category>displacement</category>
