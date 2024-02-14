@@ -3,7 +3,7 @@ project:
 
 website:
   title: "ImgLib2 news and tutorials"
-  image: imglib2-logo-social.png
+  image: imglib2-logo.png
   favicon: favicon.ico
   navbar:
     logo: imglib2-logo-header.png
