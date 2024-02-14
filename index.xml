@@ -19,11 +19,11 @@
 <generator>quarto-1.4.549</generator>
 <lastBuildDate>Wed, 14 Feb 2024 05:00:00 GMT</lastBuildDate>
 <item>
-  <title>Position and displacement field transforms</title>
+  <title>Position and displacement field transformations</title>
   <dc:creator>John Bogovic</dc:creator>
   <link>https://imglib.github.io/imglib2-blog/posts/2024-02-14-displacementFields/2024-02-14-displacementFields.html</link>
   <description><![CDATA[ Create and apply non-linear transformations with Imglib2. ]]></description>
-  <category>Imglib2</category>
+  <category>imglib2</category>
   <category>transform</category>
   <category>deformation</category>
   <category>displacement</category>
