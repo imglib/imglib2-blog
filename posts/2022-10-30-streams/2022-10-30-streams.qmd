@@ -9,7 +9,7 @@ categories:
 - stream-api
 - java
 date: '2022-10-30'
-description: Examples and performance discussion of Java Streams in ImgLib2
+description: Examples and performance discussion of Java Streams in ImgLib2.
 output-file: 2022-10-30-streams.html
 title: Adding Stream support to ImgLib2
 toc: true
