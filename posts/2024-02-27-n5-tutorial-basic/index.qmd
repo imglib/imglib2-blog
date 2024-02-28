@@ -1,0 +1,264 @@
+---
+title: "N5 API Basics"
+description: "Basics of the N5 API for Java developers. This tutorial shows how to read and write array data and metadata using N5."
+author: "John Bogovic"
+date: "2/27/2024"
+date-modified: "2/27/2024"
+notebook-links: global
+image: n5-basic-tutorial-thumbnail.png
+categories:
+  - hdf5
+  - n5
+  - zarr
+  - imglib2
+  - tutorial
+---
+
+This tutorial for Java developers covers the most basic functionality of the [N5 API](https://github.com/saalfeldlab/n5). We will learn about:
+
+* creating readers and writers
+* modifying and inspecting the hierarchy ("folder structure")
+* saving and loading array data
+* saving and loading metadata
+
+## Readers and writers
+
+[`N5Reader`](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/N5Reader.java)s and 
+[`N5Writer`](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/N5Writer.java)s form 
+the basis of the N5 API and allow you to read and write data, respectively. We generally recommend using an
+[`N5Factory`](https://github.com/saalfeldlab/n5-universe/blob/176ff469bb711eea3320535756b2e2594cb4eb61/src/main/java/org/janelia/saalfeldlab/n5/universe/N5Factory.java) to create readers and writers:
+
+{{< embed N5-Basics-Tutorial.ipynb#make-reader-writer echo=true >}}
+
+The N5 API gives you access to a number of different storage formats: HDF5, Zarr, and N5's own
+format. `N5Factory`'s convenience methods try to infer the storage format from the extension
+of the path you give it:
+
+{{< embed N5-Basics-Tutorial.ipynb#factory-types echo=true >}}
+
+In fact, it is possible to read with `N5Writer`s since every `N5Writer`
+is also an `N5Reader`, so from now on, we'll just be using the
+`n5Writer.`
+
+::: {.callout-tip}
+## Try it!
+
+We use the the N5 storage format for the rest of the tutorial, but it will work just as well using either
+an HDF5 or Zarr writer.
+:::
+
+## Groups
+
+N5 containers form hierarchies of *groups* - think "nested folders on your file system."
+It's easy to create groups and test if they exist:
+
+{{< embed N5-Basics-Tutorial.ipynb#make-groups echo=true >}}
+
+The `list` method lists groups that are children of the given group:
+
+{{< embed N5-Basics-Tutorial.ipynb#list echo=true >}}
+
+and `deepList` recursively lists every descendent of the given group:
+
+{{< embed N5-Basics-Tutorial.ipynb#deep-list echo=true >}}
+
+Notice that these methods *only* give information about what groups are present and do not provide information about metadata or array data.
+
+::: {.callout-note}
+Some storage / access systems (AWS-S3) separate permissions for reading and listing, meaning
+it may be possible to access data but not list.
+:::
+
+## Arrays
+
+N5 stores arrays in particular groups in the hierarchy. We call groups that contain arrays
+"datasets" - [terminology inherited from HDF5](https://docs.hdfgroup.org/hdf5/develop/_g_l_s.html#title3).
+
+::: {.callout-warning}
+Datasets must be terminal (leaf) nodes in the container hierarchy - i.e. a dataset can not contain
+another group or dataset. 
+:::
+
+We recommend using code from [n5-ij](https://github.com/saalfeldlab/n5-ij) or [n5-imglib2](https://github.com/saalfeldlab/n5-imglib2)
+to write arrays. The examples in this post will use the latter.
+
+The [`N5Utils`](https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java)
+class in n5-imglib2 has many useful methods, but in this post, we'll cover simple methods for reading and writing. First, 
+[`N5Utils.save`](https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java#L1440) 
+writes an array and required array metadata to the container at a group that you specify. The group will be created if it does
+not already exist. The parameters will be discussed in more detail below. 
+
+{{< embed N5-Basics-Tutorial.ipynb#n5-imglib2-save echo=true >}}
+
+You can write blocks in parallel by providing an [`ExecutorService`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html) to this variant of
+[`N5Utils.save`](https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java#L1514)
+
+{{< embed N5-Basics-Tutorial.ipynb#n5-imglib2-save-exec echo=true >}}
+
+Reading the array data from the container is also easy with
+[`N5Utils.open`](https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java#L428) :
+
+{{< embed N5-Basics-Tutorial.ipynb#n5-imglib2-open echo=true >}}
+
+::: {.callout-warning}
+
+## Overwriting data is possible
+
+This save method *DOES NOT* perform any checks prior to writing data and will overwrite data that exists in the specified location.
+Be sure to check and take appropriate action if it is possible that data could already at a particular location and 
+container to avoid data loss or corruption.
+:::
+
+This example shows that data can be over written:
+
+{{< embed N5-Basics-Tutorial.ipynb#n5-imglib2-overwrite echo=true >}}
+
+### Parameter details
+
+#### `groupPath` 
+
+is the group inside the container that will store the array. You can store an array at the
+root of a container by specifying `""` or `"/"` as the `groupPath`. In this case, the container
+will only be able to store one array (see the warning above at the start of the "Arrays" section).
+
+#### `blockSize` 
+
+is a very important parameter of an array. HDF5, N5, and Zarr all break up the arrays they store
+into equally sized blocks or "chunks". The block size parameter specifies the size of these blocks.
+
+For the example above, we stored an image of size `64 x 64` using blocks sized `32 x 32`. As a result, N5 uses
+four blocks to store the entire image:
+
+{{< embed N5-Basics-Tutorial.ipynb#four-blocks echo=true >}}
+
+*Quiz:* How many blocks would there be if the block size was `64 x 8`? 
+
+<details>
+<summary>Click here to show the answer.</summary>
+
+There would be eight blocks.
+
+One block covers the first dimension, but it takes 8 blocks to cover the second dimension ($8 \times 8 = 64$).
+Also demonstrated by the code below:
+
+{{< embed N5-Basics-Tutorial.ipynb#eight-blocks echo=true >}}
+
+</details>
+
+::: {.callout-tip}
+## Try it!
+
+N5 lets you store your image in a single file if you want - just provide a block size that 
+is equal to or larger than the image size.
+:::
+
+#### `compression` 
+
+Each block is compressed independently, using the specified compressor.
+Use [`RawCompression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/RawCompression.java)
+to store blocks without compression.
+
+{{< embed N5-Basics-Tutorial.ipynb#no-compression echo=true >}}
+
+Notice that blocks were previously ~1700-2000 bytes and are now ~4100 without compression.
+
+The available compressors at the time of this writing are:
+
+* [`BloscCompression`](https://github.com/saalfeldlab/n5-blosc/blob/b4abb12cff739281fb703fd54975d6df654b021d/src/main/java/org/janelia/saalfeldlab/n5/blosc/BloscCompression.java)
+* [`Bzip2Compression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/Bzip2Compression.java)
+* [`GzipCompression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/GzipCompression.java)
+* [`Lz4Compression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/Lz4Compression.java)
+* [`RawCompression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/RawCompression.java)
+* [`XzCompression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/XzCompression.java)
+* [`ZstandardCompression`](https://github.com/JaneliaSciComp/n5-zstandard/blob/1af7a5b56a60c0bb346f5795d936453557e1a947/src/main/java/org/janelia/scicomp/n5/zstandard/ZstandardCompression.java)
+
+## Metadata
+
+Besides array data, N5 can also store rich structured metadata. This tutorial will discuss basic, low-level metadata operations.
+Advanced operations and metadata standards may be described in a future tutorial.
+
+### Basics
+
+`N5Writer`s have a
+[`setAttribute`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/N5Writer.java#L55) 
+method for writing metadata to the storage backend. It takes three arguments:
+
+```java
+<T> void setAttribute(String groupPath, String attributePath, T attribute)
+```
+
+* `groupPath` : the group in which to store this metadata
+* `attributePath` : the name of this attribute
+* `attribute` : the metadata attribute to be stored. Can be an arbitrary type (denoted `T`).
+
+::: {.callout-note}
+There are differences between an attribute "name" and an attribute "path", but attribute "paths" are an advanced topic
+and will be covered elsewhere.
+:::
+
+Similarly, `N5Reader`s have a 
+[`getAttribute`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/N5Reader.java#L241-L244)
+method:
+
+```java
+<T> T getAttribute(String groupPath, String attributePath, Class<T> clazz)
+```
+
+The last  argument (`Class<T>`) lets you specify the type that `getAttribute` should return.
+An `N5Exception` will be thrown if the requested type can not be created from the requested attribute.
+If an attribute does not exist, `null` will be returned (see the last example of this section).
+Consider these examples:
+
+{{< embed N5-Basics-Tutorial.ipynb#attributes-1 echo=true >}}
+
+Sometimes it is possible to interpret a metadata as multiple different types:
+
+{{< embed N5-Basics-Tutorial.ipynb#attr-types echo=true >}}
+
+### Rich metadata
+
+It possible to save attributes of arbitrary types, enabling you to struture your 
+metadata into classes that are easy to save and load directly. For example, if we define a metadata class `FunWithMetadata`:
+
+{{< embed N5-Basics-Tutorial.ipynb#fun-with-metadata echo=true >}}
+
+then make an instance and save it:
+
+{{< embed N5-Basics-Tutorial.ipynb#rich-metadata echo=true >}}
+
+To retrieve all the metadata in a group as JSON:
+
+{{< embed N5-Basics-Tutorial.ipynb#all-metadata echo=true >}}
+
+### Removing metadata
+
+You can remove attributes by their name as well. To return the element that was removed, just provide the class for that element
+(this mirrors the [remove method](https://docs.oracle.com/javase/8/docs/api/java/util/List.html#remove-int-) for `List`s in Java.
+
+{{< embed N5-Basics-Tutorial.ipynb#remove-attrs echo=true >}}
+
+::: {.callout-tip}
+## Try it!
+
+The attributes that describe arrays are also accessible using `getAttribute`, try running: 
+```java
+n5Writer.getAttribute("data", "dimensions", long[].class);
+```
+:::
+
+::: {.callout-warning}
+## Warning
+
+The attributes that N5 uses to read arrays can be set with `setAttribute`, and modifying them could corrupt your data.
+**Do not manually set these attributes unless you absolutely know what you're doing!**
+
+* `dimensions`
+* `blockSize`
+* `dataType`
+* `compression`
+:::
+
+## What to try next
+
+* [How to work with the N5 API and ImgLib2](https://imglib.github.io/imglib2-blog/posts/2022-09-27-n5-imglib2.html)
+
