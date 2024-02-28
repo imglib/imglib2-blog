@@ -43,8 +43,8 @@ is also an `N5Reader`, so from now on, we'll just be using the
 ::: {.callout-tip}
 ## Try it!
 
-We use the the N5 storage format for the rest of the tutorial, but it will work just as well using either
-an HDF5 or Zarr writer.
+We use the the N5 storage format for the rest of the tutorial, but it will work just as well over either
+an HDF5 file or Zarr container.
 :::
 
 ## Groups
@@ -76,7 +76,7 @@ N5 stores arrays in particular groups in the hierarchy. We call groups that cont
 
 ::: {.callout-warning}
 Datasets must be terminal (leaf) nodes in the container hierarchy - i.e. a dataset can not contain
-another group or dataset. 
+another group or dataset.  (Is this strictly true? May be confusing with names like multiscale "datasets")
 :::
 
 We recommend using code from [n5-ij](https://github.com/saalfeldlab/n5-ij) or [n5-imglib2](https://github.com/saalfeldlab/n5-imglib2)
@@ -105,7 +105,7 @@ Reading the array data from the container is also easy with
 ## Overwriting data is possible
 
 This save method *DOES NOT* perform any checks prior to writing data and will overwrite data that exists in the specified location.
-Be sure to check and take appropriate action if it is possible that data could already at a particular location and 
+Be sure to check and take appropriate action if it is possible that data could already be at a particular location and 
 container to avoid data loss or corruption.
 :::
 
@@ -119,7 +119,7 @@ This example shows that data can be over written:
 
 is the group inside the container that will store the array. You can store an array at the
 root of a container by specifying `""` or `"/"` as the `groupPath`. In this case, the container
-will only be able to store one array (see the warning above at the start of the "Arrays" section).
+will only be able to store one array ([see the warning above](#Arrays)).
 
 #### `blockSize` 
 
@@ -154,23 +154,23 @@ is equal to or larger than the image size.
 
 #### `compression` 
 
-Each block is compressed independently, using the specified compressor.
-Use [`RawCompression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/RawCompression.java)
+Each block is compressed independently, using the specified compression.
+Use [`RawCompression`](https://github.com/saalfeldlab/n5/blob/n5-3.1.3/src/main/java/org/janelia/saalfeldlab/n5/RawCompression.java)
 to store blocks without compression.
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#no-compression echo=true >}}
 
 Notice that blocks were previously ~1700-2000 bytes and are now ~4100 without compression.
 
-The available compressors at the time of this writing are:
+The available compression options at the time of this writing are:
 
-* [`BloscCompression`](https://github.com/saalfeldlab/n5-blosc/blob/b4abb12cff739281fb703fd54975d6df654b021d/src/main/java/org/janelia/saalfeldlab/n5/blosc/BloscCompression.java)
-* [`Bzip2Compression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/Bzip2Compression.java)
-* [`GzipCompression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/GzipCompression.java)
-* [`Lz4Compression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/Lz4Compression.java)
-* [`RawCompression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/RawCompression.java)
-* [`XzCompression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/XzCompression.java)
-* [`ZstandardCompression`](https://github.com/JaneliaSciComp/n5-zstandard/blob/1af7a5b56a60c0bb346f5795d936453557e1a947/src/main/java/org/janelia/scicomp/n5/zstandard/ZstandardCompression.java)
+* [`BloscCompression`](https://github.com/saalfeldlab/n5-blosc/blob/n5-blosc-1.1.1/src/main/java/org/janelia/saalfeldlab/n5/blosc/BloscCompression.java)
+* [`Bzip2Compression`](https://github.com/saalfeldlab/n5/blob/n5-3.1.3/src/main/java/org/janelia/saalfeldlab/n5/Bzip2Compression.java)
+* [`GzipCompression`](https://github.com/saalfeldlab/n5/blob/n5-3.1.3/src/main/java/org/janelia/saalfeldlab/n5/GzipCompression.java)
+* [`Lz4Compression`](https://github.com/saalfeldlab/n5/blob/n5-3.1.3/src/main/java/org/janelia/saalfeldlab/n5/Lz4Compression.java)
+* [`RawCompression`](https://github.com/saalfeldlab/n5/blob/n5-3.1.3/src/main/java/org/janelia/saalfeldlab/n5/RawCompression.java)
+* [`XzCompression`](https://github.com/saalfeldlab/n5/blob/n5-3.1.3/src/main/java/org/janelia/saalfeldlab/n5/XzCompression.java)
+* [`ZstandardCompression`](https://github.com/JaneliaSciComp/n5-zstandard/blob/n5-zstandard-1.0.2/src/main/java/org/janelia/scicomp/n5/zstandard/ZstandardCompression.java)
 
 ## Metadata
 
@@ -180,7 +180,7 @@ Advanced operations and metadata standards may be described in a future tutorial
 ### Basics
 
 `N5Writer`s have a
-[`setAttribute`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/N5Writer.java#L55) 
+[`setAttribute`](https://github.com/saalfeldlab/n5/blob/n5-3.1.3/src/main/java/org/janelia/saalfeldlab/n5/N5Writer.java#L55) 
 method for writing metadata to the storage backend. It takes three arguments:
 
 ```java
@@ -197,7 +197,7 @@ and will be covered elsewhere.
 :::
 
 Similarly, `N5Reader`s have a 
-[`getAttribute`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/N5Reader.java#L241-L244)
+[`getAttribute`](https://github.com/saalfeldlab/n5/blob/n5-3.1.3/src/main/java/org/janelia/saalfeldlab/n5/N5Reader.java#L241-L244)
 method:
 
 ```java
@@ -211,7 +211,7 @@ Consider these examples:
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#attributes-1 echo=true >}}
 
-Sometimes it is possible to interpret a metadata as multiple different types:
+Sometimes it is possible to interpret an attribute as multiple different types:
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#attr-types echo=true >}}
 
@@ -236,6 +236,16 @@ You can remove attributes by their name as well. To return the element that was 
 (this mirrors the [remove method](https://docs.oracle.com/javase/8/docs/api/java/util/List.html#remove-int-) for `List`s in Java.
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#remove-attrs echo=true >}}
+
+### Working with Array Metadata
+
+Metadata used to describe arrays can be `get` and `set` the same as all other metadata. 
+However there are special [link](DatasetAttributes) methods to safely work with array metadata.
+`N5Reader.getDatasetAttributes` and `N5Writer.setDatasetAttributes` ensure the metadata is always a valid representation of array metadata.
+Setting `DatasetAttributes` however should only be done when the array is initially saved to the dataset. This ensure the array metadata is tightly coupled with the data.
+For example, `set`ting array metadata should be done through the [N5Writer.createDataset](DatasetAttributes) methods (or indirectly through the [N5Utils.save]() [methods menthioned above](#Arrays))
+
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#array-metadata echo=true >}}
 
 ::: {.callout-tip}
 ## Try it!
