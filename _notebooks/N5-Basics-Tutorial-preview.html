@@ -1,80 +1,168 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="generator" content="quarto-1.4.549">
 
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>ImgLib2 news and tutorials</title>
-<style>
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
-  vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../../favicon.ico" rel="icon">
-<script src="../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+    <title>ImgLib2 news and tutorials</title>
+    <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      ul.task-list{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+        vertical-align: middle;
+      }
+      /* CSS for syntax highlighting */
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+        }
+      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+      div.sourceCode
+        {   }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+    </style>
+
+    <style>
+      body.hypothesis-enabled #quarto-embed-header {
+        padding-right: 36px;
+      }
+
+      #quarto-embed-header {
+        height: 3em;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: solid 1px;
+      }
+
+      #quarto-embed-header h6 {
+        font-size: 1.1em;
+        padding-top: 0.6em;
+        margin-left: 1em;
+        margin-right: 1em;
+        font-weight: 400;
+      }
+
+      #quarto-embed-header a.quarto-back-link,
+      #quarto-embed-header a.quarto-download-embed {
+        font-size: 0.8em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+
+      .quarto-back-container {
+        padding-left: 0.5em;
+        display: flex;
+      }
+
+      .headroom {
+          will-change: transform;
+          transition: transform 200ms linear;
+      }
+
+      .headroom--pinned {
+          transform: translateY(0%);
+      }
+
+      .headroom--unpinned {
+          transform: translateY(-100%);
+      }      
+    </style>
+
+    <script>
+    window.document.addEventListener("DOMContentLoaded", function () {
+
+      var header = window.document.querySelector("#quarto-embed-header");
+      const titleBannerEl = window.document.querySelector("body > #title-block-header");
+      if (titleBannerEl) {
+        titleBannerEl.style.paddingTop = header.clientHeight + "px";
+      }
+      const contentEl = window.document.getElementById('quarto-content');
+      for (const child of contentEl.children) {
+        child.style.paddingTop = header.clientHeight + "px";
+        child.style.marginTop = "1em";
+      }
+
+      // Use the article root if the `back` call doesn't work. This isn't perfect
+      // but should typically work
+      window.quartoBackToArticle = () => {
+        var currentUrl = window.location.href;
+        window.history.back();
+        setTimeout(() => {
+            // if location was not changed in 100 ms, then there is no history back
+            if(currentUrl === window.location.href){              
+                // redirect to site root
+                window.location.href = '/';
+            }
+        }, 100);
+      }
+
+      const headroom = new window.Headroom(header, {
+        tolerance: 5,
+        onPin: function () {
+        },
+        onUnpin: function () {
+        },
+      });
+      headroom.init();
+    });
+    </script>
+
+    
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+     <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -100,26 +188,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script>
-
-
-<link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="ImgLib2 news and tutorials">
-<meta property="og:image" content="https://imglib.github.io/imglib2-blog/posts/2024-02-27-n5-tutorial-basic/imglib2-logo.png">
+}</script>  
+        <link rel="stylesheet" href="../styles.css">
+      <meta property="og:title" content="ImgLib2 news and tutorials">
+<meta property="og:image" content="https://imglib.github.io/imglib2-blog/_notebooks/imglib2-logo.png">
 <meta property="og:site_name" content="ImgLib2 news and tutorials">
 </head>
 
-<body class="nav-fixed fullcontent">
+  <body class="floating nav-fixed quarto-notebook">
+    <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
+      
+      <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link"><i class="bi bi-caret-left"></i> Back to Article</a>
+      <h6><i class="bi bi-journal-code"></i> N5-Basics-Tutorial.ipynb</h6>
 
-<div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+            <a href="../_notebooks/N5-Basics-Tutorial.ipynb" class="btn btn-primary quarto-download-embed" download="N5-Basics-Tutorial.ipynb">Download Notebook</a>
+          </div>
+
+     <div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../imglib2-logo-header.png" alt="" class="navbar-logo">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../imglib2-logo-header.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="../../index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">ImgLib2 news and tutorials</span>
     </a>
   </div>
@@ -130,7 +223,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">ImgLib2</span></a>
   </li>  
   <li class="nav-item compact">
@@ -144,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -158,15 +251,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content"><div class="quarto-title-block"><div class="quarto-title-tools-only"><h1></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button" data-quarto-source-url="https://github.com/imglib/imglib2-blog/blob/main/posts/2024-02-27-n5-tutorial-basic/N5-Basics-Tutorial.ipynb">View Source</a></li></ul></div></div>
-
-
-
-
-<div id="ef2f3d2c" class="cell" data-execution_count="1">
+<main class="content" id="quarto-document-content"><div class="quarto-title-block"><div class="quarto-title-tools-only"><h1></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button" data-quarto-source-url="https://github.com/imglib/imglib2-blog/blob/main/_notebooks/N5-Basics-Tutorial.ipynb">View Source</a></li></ul></div></div>    <div class="cell-container code-fold"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="ef2f3d2c" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>mavenRepo scijava<span class="op">.</span><span class="fu">public</span> https<span class="op">:</span><span class="co">//maven.scijava.org/content/groups/public</span></span>
@@ -176,8 +269,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>maven org<span class="op">.</span><span class="fu">janelia</span><span class="op">.</span><span class="fu">saalfeldlab</span><span class="op">:</span>n5<span class="op">-</span>imglib2<span class="op">:</span><span class="fl">7.0.0</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>maven org<span class="op">.</span><span class="fu">janelia</span><span class="op">.</span><span class="fu">saalfeldlab</span><span class="op">:</span>n5<span class="op">-</span>universe<span class="op">:</span><span class="fl">1.3.1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="f70aa4d8" class="cell" data-execution_count="2">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="f70aa4d8" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">nio</span><span class="op">.</span><span class="im">file</span><span class="op">.*;</span></span>
@@ -196,8 +289,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">org</span><span class="op">.</span><span class="im">janelia</span><span class="op">.</span><span class="im">saalfeldlab</span><span class="op">.</span><span class="im">n5</span><span class="op">.</span><span class="im">imglib2</span><span class="op">.*;</span></span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">org</span><span class="op">.</span><span class="im">janelia</span><span class="op">.</span><span class="im">saalfeldlab</span><span class="op">.</span><span class="im">n5</span><span class="op">.</span><span class="im">universe</span><span class="op">.*;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="b994b3b7" class="cell" data-execution_count="3">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="b994b3b7" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">pathInfo</span><span class="op">(</span>Path p<span class="op">)</span> <span class="op">{</span></span>
@@ -215,8 +308,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="89830e81" class="cell" data-tags="[&quot;make-reader-writer&quot;]" data-execution_count="4">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="89830e81" class="cell" data-tags="[&quot;make-reader-writer&quot;]" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// N5Factory can make N5Readers and N5Writers</span></span>
@@ -238,16 +331,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">// "" and "/" both refer to the root of the container</span></span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>n5Reader<span class="op">.</span><span class="fu">exists</span><span class="op">(</span><span class="st">"/"</span><span class="op">);</span> <span class="co">// true</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="8a6621e1" class="cell" data-tags="[&quot;factory-types&quot;]" data-execution_count="5">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="8a6621e1" class="cell" data-tags="[&quot;factory-types&quot;]" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>factory<span class="op">.</span><span class="fu">openWriter</span><span class="op">(</span><span class="st">"my-container.h5"</span><span class="op">).</span><span class="fu">getClass</span><span class="op">();</span>   <span class="co">// N5HDF5Writer</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>factory<span class="op">.</span><span class="fu">openWriter</span><span class="op">(</span><span class="st">"my-container.n5"</span><span class="op">).</span><span class="fu">getClass</span><span class="op">();</span>   <span class="co">// N5FSWriter</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>factory<span class="op">.</span><span class="fu">openWriter</span><span class="op">(</span><span class="st">"my-container.zarr"</span><span class="op">).</span><span class="fu">getClass</span><span class="op">();</span> <span class="co">// N5ZarrWriter</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="9ee0c14d" class="cell" data-tags="[&quot;make-groups&quot;]" data-execution_count="6">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="9ee0c14d" class="cell" data-tags="[&quot;make-groups&quot;]" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">createGroup</span><span class="op">(</span><span class="st">"foo"</span><span class="op">);</span></span>
@@ -257,15 +350,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">exists</span><span class="op">(</span><span class="st">"lorum/ipsum"</span><span class="op">);</span>      <span class="co">// true</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">exists</span><span class="op">(</span><span class="st">"not/a/real/group"</span><span class="op">);</span> <span class="co">// false</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="72496634" class="cell" data-tags="[&quot;list&quot;]" data-execution_count="7">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="72496634" class="cell" data-tags="[&quot;list&quot;]" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">list</span><span class="op">(</span><span class="st">""</span><span class="op">);</span>     <span class="co">// [lorum, foo]</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">list</span><span class="op">(</span><span class="st">"foo"</span><span class="op">);</span>  <span class="co">// [bar]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="1f363282" class="cell" data-tags="[&quot;deep-list&quot;]" data-execution_count="8">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="1f363282" class="cell" data-tags="[&quot;deep-list&quot;]" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>n5Writer<span class="op">.</span><span class="fu">deepList</span><span class="op">(</span><span class="st">""</span><span class="op">));</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -273,8 +366,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>[lorum, lorum/ipsum, lorum/ipsum/dolor, lorum/ipsum/dolor/sit, lorum/ipsum/dolor/sit/amet, foo, foo/bar]</code></pre>
 </div>
-</div>
-<div id="996e162e" class="cell" data-execution_count="9">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="996e162e" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">static</span> RandomAccessibleInterval<span class="op">&lt;</span>FloatType<span class="op">&gt;</span> <span class="fu">demoImage</span><span class="op">(</span><span class="dt">long</span><span class="kw">...</span> size<span class="op">)</span> <span class="op">{</span></span>
@@ -288,8 +381,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> img<span class="op">;</span></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="28e3835d" class="cell" data-tags="[&quot;n5-imglib2-save&quot;]" data-execution_count="10">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="28e3835d" class="cell" data-tags="[&quot;n5-imglib2-save&quot;]" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">// the parameters</span></span>
@@ -301,15 +394,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">// save the image</span></span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>N5Utils<span class="op">.</span><span class="fu">save</span><span class="op">(</span>img<span class="op">,</span> n5Writer<span class="op">,</span> groupPath<span class="op">,</span> blockSize<span class="op">,</span> compression<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="131e8bd4" class="cell" data-tags="[&quot;n5-imglib2-save-exec&quot;]" data-execution_count="11">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="131e8bd4" class="cell" data-tags="[&quot;n5-imglib2-save-exec&quot;]" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> exec <span class="op">=</span> <span class="bu">Executors</span><span class="op">.</span><span class="fu">newFixedThreadPool</span><span class="op">(</span><span class="dv">4</span><span class="op">);</span> <span class="co">// with 4 parallel threads</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>N5Utils<span class="op">.</span><span class="fu">save</span><span class="op">(</span>img<span class="op">,</span> n5Writer<span class="op">,</span> groupPath<span class="op">,</span> blockSize<span class="op">,</span> compression<span class="op">,</span> exec<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="79901ca0" class="cell" data-tags="[&quot;four-blocks&quot;]" data-execution_count="12">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="79901ca0" class="cell" data-tags="[&quot;four-blocks&quot;]" data-execution_count="12">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">printBlocks</span><span class="op">(</span><span class="st">"my-container.n5/data"</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -320,8 +413,8 @@ my-container.n5/data/1/0 is 2012 bytes
 my-container.n5/data/0/1 is 1763 bytes
 my-container.n5/data/0/0 is 2020 bytes</code></pre>
 </div>
-</div>
-<div id="91647d07" class="cell" data-tags="[&quot;eight-blocks&quot;]" data-execution_count="13">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="91647d07" class="cell" data-tags="[&quot;eight-blocks&quot;]" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">// remove the old data</span></span>
@@ -344,8 +437,8 @@ my-container.n5/data/0/4 is 846 bytes
 my-container.n5/data/0/2 is 840 bytes
 my-container.n5/data/0/5 is 847 bytes</code></pre>
 </div>
-</div>
-<div id="9b37d386" class="cell" data-tags="[&quot;no-compression&quot;]" data-execution_count="14">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="9b37d386" class="cell" data-tags="[&quot;no-compression&quot;]" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">// rewrite without compression</span></span>
@@ -363,16 +456,16 @@ my-container.n5/dataNoCompression/1/0 is 4108 bytes
 my-container.n5/dataNoCompression/0/1 is 4108 bytes
 my-container.n5/dataNoCompression/0/0 is 4108 bytes</code></pre>
 </div>
-</div>
-<div id="de0fadca" class="cell" data-tags="[&quot;n5-imglib2-open&quot;]" data-execution_count="15">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="de0fadca" class="cell" data-tags="[&quot;n5-imglib2-open&quot;]" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> loadedImg <span class="op">=</span> N5Utils<span class="op">.</span><span class="fu">open</span><span class="op">(</span>n5Writer<span class="op">,</span> groupPath<span class="op">);</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Util</span><span class="op">.</span><span class="fu">getTypeFromInterval</span><span class="op">(</span>loadedImg<span class="op">).</span><span class="fu">getClass</span><span class="op">();</span>      <span class="co">// FloatType</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>loadedImg<span class="op">.</span><span class="fu">dimensionsAsLongArray</span><span class="op">());</span>  <span class="co">// [64, 64]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="f861d622" class="cell" data-tags="[&quot;n5-imglib2-overwrite&quot;]" data-execution_count="16">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="f861d622" class="cell" data-tags="[&quot;n5-imglib2-overwrite&quot;]" data-execution_count="16">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">// overwrite our previous data</span></span>
@@ -383,8 +476,8 @@ my-container.n5/dataNoCompression/0/0 is 4108 bytes</code></pre>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> loadedImg <span class="op">=</span> N5Utils<span class="op">.</span><span class="fu">open</span><span class="op">(</span>n5Writer<span class="op">,</span> groupPath<span class="op">);</span></span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>loadedImg<span class="op">.</span><span class="fu">dimensionsAsLongArray</span><span class="op">());</span>  <span class="co">// [2, 2]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="75f3c15f" class="cell" data-tags="[&quot;attributes-1&quot;]" data-execution_count="28">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [28]:</pre></div><div id="75f3c15f" class="cell" data-tags="[&quot;attributes-1&quot;]" data-execution_count="28">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">// create a group inside the container (think: "folder")</span></span>
@@ -414,16 +507,16 @@ my-container.n5/dataNoCompression/0/0 is 4108 bytes</code></pre>
 <div class="cell-output cell-output-display" data-execution_count="28">
 <pre><code>2024-Jan-01</code></pre>
 </div>
-</div>
-<div id="bc080bb5" class="cell" data-tags="[&quot;attr-types&quot;]" data-execution_count="18">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [18]:</pre></div><div id="bc080bb5" class="cell" data-tags="[&quot;attr-types&quot;]" data-execution_count="18">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">setAttribute</span><span class="op">(</span>groupName<span class="op">,</span> <span class="st">"a"</span><span class="op">,</span> <span class="dv">42</span><span class="op">);</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> num <span class="op">=</span> n5Writer<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>groupName<span class="op">,</span> <span class="st">"a"</span><span class="op">,</span> <span class="dt">double</span><span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// 42.0</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> str <span class="op">=</span> n5Writer<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>groupName<span class="op">,</span> <span class="st">"a"</span><span class="op">,</span> <span class="bu">String</span><span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// "42"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="76639ba3" class="cell" data-tags="[&quot;fun-with-metadata&quot;]" data-execution_count="19">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [19]:</pre></div><div id="76639ba3" class="cell" data-tags="[&quot;fun-with-metadata&quot;]" data-execution_count="19">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FunWithMetadata <span class="op">{</span></span>
@@ -442,8 +535,8 @@ my-container.n5/dataNoCompression/0/0 is 4108 bytes</code></pre>
 <span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="03dc0d4d" class="cell" data-tags="[&quot;rich-metadata&quot;]" data-execution_count="20">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [20]:</pre></div><div id="03dc0d4d" class="cell" data-tags="[&quot;rich-metadata&quot;]" data-execution_count="20">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> metadata <span class="op">=</span> <span class="kw">new</span> <span class="fu">FunWithMetadata</span><span class="op">(</span><span class="st">"Dorothy"</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="kw">new</span> <span class="dt">double</span><span class="op">[]{</span><span class="fl">2.72</span><span class="op">,</span> <span class="fl">3.14</span><span class="op">});</span></span>
@@ -456,8 +549,8 @@ my-container.n5/dataNoCompression/0/0 is 4108 bytes</code></pre>
 <div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>FunWithMetadata{Dorothy(2): [2.72, 3.14]}</code></pre>
 </div>
-</div>
-<div id="1b8133bc" class="cell" data-tags="[&quot;all-metadata&quot;]" data-execution_count="21">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [21]:</pre></div><div id="1b8133bc" class="cell" data-tags="[&quot;all-metadata&quot;]" data-execution_count="21">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>groupName<span class="op">,</span> <span class="st">"/"</span><span class="op">,</span> JsonElement<span class="op">.</span><span class="fu">class</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -465,8 +558,8 @@ my-container.n5/dataNoCompression/0/0 is 4108 bytes</code></pre>
 <div class="cell-output cell-output-display" data-execution_count="21">
 <pre><code>{"date":"2024-Jan-01","a":42,"metadata":{"name":"Dorothy","number":2,"data":[2.72,3.14]}}</code></pre>
 </div>
-</div>
-<div id="5ebc9d0d" class="cell" data-tags="[&quot;remove-attrs&quot;]" data-execution_count="22">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [22]:</pre></div><div id="5ebc9d0d" class="cell" data-tags="[&quot;remove-attrs&quot;]" data-execution_count="22">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">// set attributes</span></span>
@@ -486,8 +579,8 @@ my-container.n5/dataNoCompression/0/0 is 4108 bytes</code></pre>
 <span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>groupName<span class="op">,</span> <span class="st">"sender"</span><span class="op">,</span> <span class="bu">String</span><span class="op">.</span><span class="fu">class</span><span class="op">);</span>   <span class="co">// null</span></span>
 <span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>groupName<span class="op">,</span> <span class="st">"receiver"</span><span class="op">,</span> <span class="bu">String</span><span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// null</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="d0fb1e31" class="cell" data-tags="[&quot;bonus&quot;]" data-execution_count="23">
+</div></div>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [23]:</pre></div><div id="d0fb1e31" class="cell" data-tags="[&quot;bonus&quot;]" data-execution_count="23">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>n5Writer<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span><span class="st">"data"</span><span class="op">,</span> <span class="st">"dimensions"</span><span class="op">,</span> <span class="dt">long</span><span class="op">[].</span><span class="fu">class</span><span class="op">));</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -495,12 +588,10 @@ my-container.n5/dataNoCompression/0/0 is 4108 bytes</code></pre>
 <div class="cell-output cell-output-display" data-execution_count="23">
 <pre><code>[64, 64]</code></pre>
 </div>
-</div>
+</div></div>
 
 
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+     </main> <!-- /main -->  <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -937,10 +1028,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-</div> <!-- /content -->
-
-
-
-
+</script>  </div> <!-- /content --> 
+  
 </body></html>

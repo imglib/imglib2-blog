@@ -242,7 +242,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="N5-Basics-Tutorial-preview.html"><i class="bi bi-journal-code"></i>N5-Basics-Tutorial.ipynb</a></li></ul></div></div>
+    <div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="../../_notebooks/N5-Basics-Tutorial-preview.html"><i class="bi bi-journal-code"></i>N5-Basics-Tutorial.ipynb</a></li></ul></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -284,7 +284,7 @@ window.Quarto = {
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>n5Reader<span class="op">.</span><span class="fu">exists</span><span class="op">(</span><span class="st">"/"</span><span class="op">);</span> <span class="co">// true</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-1" href="../../_notebooks/N5-Basics-Tutorial-preview.html#89830e81">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p>The N5 API gives you access to a number of different storage formats: HDF5, Zarr, and N5’s own format. <code>N5Factory</code>’s convenience methods try to infer the storage format from the extension of the path you give it:</p>
 <div class="quarto-embed-nb-cell">
 <div id="8a6621e1" class="cell" data-tags="[&quot;factory-types&quot;]" data-execution_count="5">
@@ -295,7 +295,7 @@ window.Quarto = {
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>factory<span class="op">.</span><span class="fu">openWriter</span><span class="op">(</span><span class="st">"my-container.zarr"</span><span class="op">).</span><span class="fu">getClass</span><span class="op">();</span> <span class="co">// N5ZarrWriter</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-2" href="../../_notebooks/N5-Basics-Tutorial-preview.html#8a6621e1">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p>In fact, it is possible to read with <code>N5Writer</code>s since every <code>N5Writer</code> is also an <code>N5Reader</code>, so from now on, we’ll just be using the <code>n5Writer.</code></p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -326,7 +326,7 @@ Try it!
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">exists</span><span class="op">(</span><span class="st">"not/a/real/group"</span><span class="op">);</span> <span class="co">// false</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-3" href="../../_notebooks/N5-Basics-Tutorial-preview.html#9ee0c14d">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p>The <code>list</code> method lists groups that are children of the given group:</p>
 <div class="quarto-embed-nb-cell">
 <div id="72496634" class="cell" data-tags="[&quot;list&quot;]" data-execution_count="7">
@@ -336,7 +336,7 @@ Try it!
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">list</span><span class="op">(</span><span class="st">"foo"</span><span class="op">);</span>  <span class="co">// [bar]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-4" href="../../_notebooks/N5-Basics-Tutorial-preview.html#72496634">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p>and <code>deepList</code> recursively lists every descendent of the given group:</p>
 <div class="quarto-embed-nb-cell">
 <div id="1f363282" class="cell" data-tags="[&quot;deep-list&quot;]" data-execution_count="8">
@@ -348,7 +348,7 @@ Try it!
 <pre><code>[lorum, lorum/ipsum, lorum/ipsum/dolor, lorum/ipsum/dolor/sit, lorum/ipsum/dolor/sit/amet, foo, foo/bar]</code></pre>
 </div>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-5" href="../../_notebooks/N5-Basics-Tutorial-preview.html#1f363282">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p>Notice that these methods <em>only</em> give information about what groups are present and do not provide information about metadata or array data.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -396,7 +396,7 @@ Warning
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>N5Utils<span class="op">.</span><span class="fu">save</span><span class="op">(</span>img<span class="op">,</span> n5Writer<span class="op">,</span> groupPath<span class="op">,</span> blockSize<span class="op">,</span> compression<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-6" href="../../_notebooks/N5-Basics-Tutorial-preview.html#28e3835d">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p>You can write blocks in parallel by providing an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html"><code>ExecutorService</code></a> to this variant of <a href="https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java#L1514"><code>N5Utils.save</code></a></p>
 <div class="quarto-embed-nb-cell">
 <div id="131e8bd4" class="cell" data-tags="[&quot;n5-imglib2-save-exec&quot;]" data-execution_count="11">
@@ -406,7 +406,7 @@ Warning
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>N5Utils<span class="op">.</span><span class="fu">save</span><span class="op">(</span>img<span class="op">,</span> n5Writer<span class="op">,</span> groupPath<span class="op">,</span> blockSize<span class="op">,</span> compression<span class="op">,</span> exec<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-7" href="../../_notebooks/N5-Basics-Tutorial-preview.html#131e8bd4">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p>Reading the array data from the container is also easy with <a href="https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java#L428"><code>N5Utils.open</code></a> :</p>
 <div class="quarto-embed-nb-cell">
 <div id="de0fadca" class="cell" data-tags="[&quot;n5-imglib2-open&quot;]" data-execution_count="15">
@@ -417,7 +417,7 @@ Warning
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>loadedImg<span class="op">.</span><span class="fu">dimensionsAsLongArray</span><span class="op">());</span>  <span class="co">// [64, 64]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-8" href="../../_notebooks/N5-Basics-Tutorial-preview.html#de0fadca">Source: N5-Basics-Tutorial.ipynb</a></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -445,7 +445,7 @@ Overwriting data is possible
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>loadedImg<span class="op">.</span><span class="fu">dimensionsAsLongArray</span><span class="op">());</span>  <span class="co">// [2, 2]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-9" href="../../_notebooks/N5-Basics-Tutorial-preview.html#f861d622">Source: N5-Basics-Tutorial.ipynb</a></div>
 <section id="parameter-details" class="level3">
 <h3 class="anchored" data-anchor-id="parameter-details">Parameter details</h3>
 <section id="grouppath" class="level4">
@@ -469,7 +469,7 @@ my-container.n5/data/0/1 is 1763 bytes
 my-container.n5/data/0/0 is 2020 bytes</code></pre>
 </div>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-10" href="../../_notebooks/N5-Basics-Tutorial-preview.html#79901ca0">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p><em>Quiz:</em> How many blocks would there be if the block size was <code>64 x 8</code>?</p>
 <details>
 <summary>
@@ -502,7 +502,7 @@ my-container.n5/data/0/2 is 840 bytes
 my-container.n5/data/0/5 is 847 bytes</code></pre>
 </div>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-11" href="../../_notebooks/N5-Basics-Tutorial-preview.html#91647d07">Source: N5-Basics-Tutorial.ipynb</a></div>
 </details>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -541,7 +541,7 @@ my-container.n5/dataNoCompression/0/1 is 4108 bytes
 my-container.n5/dataNoCompression/0/0 is 4108 bytes</code></pre>
 </div>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-12" href="../../_notebooks/N5-Basics-Tutorial-preview.html#9b37d386">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p>Notice that blocks were previously ~1700-2000 bytes and are now ~4100 without compression.</p>
 <p>The available compressors at the time of this writing are:</p>
 <ul>
@@ -616,7 +616,7 @@ Note
 <pre><code>2024-Jan-01</code></pre>
 </div>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-13" href="../../_notebooks/N5-Basics-Tutorial-preview.html#75f3c15f">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p>Sometimes it is possible to interpret a metadata as multiple different types:</p>
 <div class="quarto-embed-nb-cell">
 <div id="bc080bb5" class="cell" data-tags="[&quot;attr-types&quot;]" data-execution_count="18">
@@ -627,7 +627,7 @@ Note
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> str <span class="op">=</span> n5Writer<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>groupName<span class="op">,</span> <span class="st">"a"</span><span class="op">,</span> <span class="bu">String</span><span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// "42"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-14" href="../../_notebooks/N5-Basics-Tutorial-preview.html#bc080bb5">Source: N5-Basics-Tutorial.ipynb</a></div>
 </section>
 <section id="rich-metadata" class="level3">
 <h3 class="anchored" data-anchor-id="rich-metadata">Rich metadata</h3>
@@ -653,7 +653,7 @@ Note
 <span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-15" href="../../_notebooks/N5-Basics-Tutorial-preview.html#76639ba3">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p>then make an instance and save it:</p>
 <div class="quarto-embed-nb-cell">
 <div id="03dc0d4d" class="cell" data-tags="[&quot;rich-metadata&quot;]" data-execution_count="20">
@@ -670,7 +670,7 @@ Note
 <pre><code>FunWithMetadata{Dorothy(2): [2.72, 3.14]}</code></pre>
 </div>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-16" href="../../_notebooks/N5-Basics-Tutorial-preview.html#03dc0d4d">Source: N5-Basics-Tutorial.ipynb</a></div>
 <p>To retrieve all the metadata in a group as JSON:</p>
 <div class="quarto-embed-nb-cell">
 <div id="1b8133bc" class="cell" data-tags="[&quot;all-metadata&quot;]" data-execution_count="21">
@@ -682,7 +682,7 @@ Note
 <pre><code>{"date":"2024-Jan-01","a":42,"metadata":{"name":"Dorothy","number":2,"data":[2.72,3.14]}}</code></pre>
 </div>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-17" href="../../_notebooks/N5-Basics-Tutorial-preview.html#1b8133bc">Source: N5-Basics-Tutorial.ipynb</a></div>
 </section>
 <section id="removing-metadata" class="level3">
 <h3 class="anchored" data-anchor-id="removing-metadata">Removing metadata</h3>
@@ -709,7 +709,7 @@ Note
 <span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>n5Writer<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>groupName<span class="op">,</span> <span class="st">"receiver"</span><span class="op">,</span> <span class="bu">String</span><span class="op">.</span><span class="fu">class</span><span class="op">);</span> <span class="co">// null</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
+<a class="quarto-notebook-link" id="nblink-18" href="../../_notebooks/N5-Basics-Tutorial-preview.html#5ebc9d0d">Source: N5-Basics-Tutorial.ipynb</a></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
