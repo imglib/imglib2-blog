@@ -4,7 +4,7 @@ description: "Basics of the N5 API for Java developers. This tutorial shows how 
 author: "John Bogovic"
 date: "2/27/2024"
 date-modified: "2/27/2024"
-notebook-links: global
+_notebooks-links: global
 image: n5-basic-tutorial-thumbnail.png
 categories:
   - hdf5
@@ -28,13 +28,13 @@ This tutorial for Java developers covers the most basic functionality of the [N5
 the basis of the N5 API and allow you to read and write data, respectively. We generally recommend using an
 [`N5Factory`](https://github.com/saalfeldlab/n5-universe/blob/176ff469bb711eea3320535756b2e2594cb4eb61/src/main/java/org/janelia/saalfeldlab/n5/universe/N5Factory.java) to create readers and writers:
 
-{{< embed N5-Basics-Tutorial.ipynb#make-reader-writer echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#make-reader-writer echo=true >}}
 
 The N5 API gives you access to a number of different storage formats: HDF5, Zarr, and N5's own
 format. `N5Factory`'s convenience methods try to infer the storage format from the extension
 of the path you give it:
 
-{{< embed N5-Basics-Tutorial.ipynb#factory-types echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#factory-types echo=true >}}
 
 In fact, it is possible to read with `N5Writer`s since every `N5Writer`
 is also an `N5Reader`, so from now on, we'll just be using the
@@ -52,15 +52,15 @@ an HDF5 or Zarr writer.
 N5 containers form hierarchies of *groups* - think "nested folders on your file system."
 It's easy to create groups and test if they exist:
 
-{{< embed N5-Basics-Tutorial.ipynb#make-groups echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#make-groups echo=true >}}
 
 The `list` method lists groups that are children of the given group:
 
-{{< embed N5-Basics-Tutorial.ipynb#list echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#list echo=true >}}
 
 and `deepList` recursively lists every descendent of the given group:
 
-{{< embed N5-Basics-Tutorial.ipynb#deep-list echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#deep-list echo=true >}}
 
 Notice that these methods *only* give information about what groups are present and do not provide information about metadata or array data.
 
@@ -88,17 +88,17 @@ class in n5-imglib2 has many useful methods, but in this post, we'll cover simpl
 writes an array and required array metadata to the container at a group that you specify. The group will be created if it does
 not already exist. The parameters will be discussed in more detail below. 
 
-{{< embed N5-Basics-Tutorial.ipynb#n5-imglib2-save echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#n5-imglib2-save echo=true >}}
 
 You can write blocks in parallel by providing an [`ExecutorService`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html) to this variant of
 [`N5Utils.save`](https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java#L1514)
 
-{{< embed N5-Basics-Tutorial.ipynb#n5-imglib2-save-exec echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#n5-imglib2-save-exec echo=true >}}
 
 Reading the array data from the container is also easy with
 [`N5Utils.open`](https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java#L428) :
 
-{{< embed N5-Basics-Tutorial.ipynb#n5-imglib2-open echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#n5-imglib2-open echo=true >}}
 
 ::: {.callout-warning}
 
@@ -111,7 +111,7 @@ container to avoid data loss or corruption.
 
 This example shows that data can be over written:
 
-{{< embed N5-Basics-Tutorial.ipynb#n5-imglib2-overwrite echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#n5-imglib2-overwrite echo=true >}}
 
 ### Parameter details
 
@@ -129,7 +129,7 @@ into equally sized blocks or "chunks". The block size parameter specifies the si
 For the example above, we stored an image of size `64 x 64` using blocks sized `32 x 32`. As a result, N5 uses
 four blocks to store the entire image:
 
-{{< embed N5-Basics-Tutorial.ipynb#four-blocks echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#four-blocks echo=true >}}
 
 *Quiz:* How many blocks would there be if the block size was `64 x 8`? 
 
@@ -141,7 +141,7 @@ There would be eight blocks.
 One block covers the first dimension, but it takes 8 blocks to cover the second dimension ($8 \times 8 = 64$).
 Also demonstrated by the code below:
 
-{{< embed N5-Basics-Tutorial.ipynb#eight-blocks echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#eight-blocks echo=true >}}
 
 </details>
 
@@ -158,7 +158,7 @@ Each block is compressed independently, using the specified compressor.
 Use [`RawCompression`](https://github.com/saalfeldlab/n5/blob/6d6a353060a1edb05c8da7ded96ec93c4b14a1c4/src/main/java/org/janelia/saalfeldlab/n5/RawCompression.java)
 to store blocks without compression.
 
-{{< embed N5-Basics-Tutorial.ipynb#no-compression echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#no-compression echo=true >}}
 
 Notice that blocks were previously ~1700-2000 bytes and are now ~4100 without compression.
 
@@ -209,33 +209,33 @@ An `N5Exception` will be thrown if the requested type can not be created from th
 If an attribute does not exist, `null` will be returned (see the last example of this section).
 Consider these examples:
 
-{{< embed N5-Basics-Tutorial.ipynb#attributes-1 echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#attributes-1 echo=true >}}
 
 Sometimes it is possible to interpret a metadata as multiple different types:
 
-{{< embed N5-Basics-Tutorial.ipynb#attr-types echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#attr-types echo=true >}}
 
 ### Rich metadata
 
 It possible to save attributes of arbitrary types, enabling you to struture your 
 metadata into classes that are easy to save and load directly. For example, if we define a metadata class `FunWithMetadata`:
 
-{{< embed N5-Basics-Tutorial.ipynb#fun-with-metadata echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#fun-with-metadata echo=true >}}
 
 then make an instance and save it:
 
-{{< embed N5-Basics-Tutorial.ipynb#rich-metadata echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#rich-metadata echo=true >}}
 
 To retrieve all the metadata in a group as JSON:
 
-{{< embed N5-Basics-Tutorial.ipynb#all-metadata echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#all-metadata echo=true >}}
 
 ### Removing metadata
 
 You can remove attributes by their name as well. To return the element that was removed, just provide the class for that element
 (this mirrors the [remove method](https://docs.oracle.com/javase/8/docs/api/java/util/List.html#remove-int-) for `List`s in Java.
 
-{{< embed N5-Basics-Tutorial.ipynb#remove-attrs echo=true >}}
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#remove-attrs echo=true >}}
 
 ::: {.callout-tip}
 ## Try it!
