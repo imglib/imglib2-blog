@@ -17,7 +17,21 @@
 <width>144</width>
 </image>
 <generator>quarto-1.4.549</generator>
-<lastBuildDate>Wed, 14 Feb 2024 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 27 Feb 2024 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>N5 API Basics</title>
+  <dc:creator>John Bogovic</dc:creator>
+  <link>https://imglib.github.io/imglib2-blog/posts/2024-02-27-n5-tutorial-basic/</link>
+  <description><![CDATA[ Basics of the N5 API for Java developers. This tutorial shows how to read and write array data and metadata using N5. ]]></description>
+  <category>hdf5</category>
+  <category>n5</category>
+  <category>zarr</category>
+  <category>imglib2</category>
+  <category>tutorial</category>
+  <guid>https://imglib.github.io/imglib2-blog/posts/2024-02-27-n5-tutorial-basic/</guid>
+  <pubDate>Tue, 27 Feb 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://imglib.github.io/imglib2-blog/posts/2024-02-27-n5-tutorial-basic/n5-basic-tutorial-thumbnail.png" medium="image" type="image/png" height="64" width="144"/>
+</item>
 <item>
   <title>Position and displacement field transformations</title>
   <dc:creator>John Bogovic</dc:creator>

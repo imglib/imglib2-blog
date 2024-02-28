@@ -1,39 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://imglib.github.io/imglib2-blog/posts/2022-09-04-how-to-display-imglib2-data.html</loc>
-    <lastmod>2024-02-14T23:49:30.013Z</lastmod>
-  </url>
-  <url>
-    <loc>https://imglib.github.io/imglib2-blog/posts/2022-08-08-keymaps/2022-08-08-keymaps.html</loc>
-    <lastmod>2024-02-14T15:23:29.915Z</lastmod>
-  </url>
-  <url>
-    <loc>https://imglib.github.io/imglib2-blog/posts/2022-05-02-juliaset-lambda.html</loc>
-    <lastmod>2024-02-14T23:48:44.854Z</lastmod>
-  </url>
-  <url>
-    <loc>https://imglib.github.io/imglib2-blog/posts/2022-09-27-n5-imglib2.html</loc>
-    <lastmod>2024-02-14T23:49:50.334Z</lastmod>
-  </url>
-  <url>
     <loc>https://imglib.github.io/imglib2-blog/about.html</loc>
-    <lastmod>2024-02-13T02:05:03.097Z</lastmod>
-  </url>
-  <url>
-    <loc>https://imglib.github.io/imglib2-blog/index.html</loc>
-    <lastmod>2024-02-14T01:43:37.694Z</lastmod>
-  </url>
-  <url>
-    <loc>https://imglib.github.io/imglib2-blog/posts/2022-10-30-streams/2022-10-30-streams.html</loc>
-    <lastmod>2024-02-14T23:50:15.551Z</lastmod>
-  </url>
-  <url>
-    <loc>https://imglib.github.io/imglib2-blog/posts/2024-02-14-displacementFields/2024-02-14-displacementFields.html</loc>
-    <lastmod>2024-02-14T23:49:22.020Z</lastmod>
+    <lastmod>2024-02-22T21:30:32.789Z</lastmod>
   </url>
   <url>
     <loc>https://imglib.github.io/imglib2-blog/posts/2022-06-05-setup-ijava-jupyter-kernel.html</loc>
-    <lastmod>2024-02-14T23:49:11.348Z</lastmod>
+    <lastmod>2024-02-22T21:30:32.793Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2024-02-14-displacementFields/2024-02-14-displacementFields.html</loc>
+    <lastmod>2024-02-22T21:30:32.865Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2022-09-04-how-to-display-imglib2-data.html</loc>
+    <lastmod>2024-02-22T21:30:32.837Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2024-02-27-n5-tutorial-basic/N5-Basics-Tutorial.html</loc>
+    <lastmod>2024-02-28T00:34:54.563Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2022-10-30-streams/2022-10-30-streams.html</loc>
+    <lastmod>2024-02-22T21:30:32.837Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2024-02-27-n5-tutorial-basic/index.html</loc>
+    <lastmod>2024-02-28T00:41:45.817Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2022-09-27-n5-imglib2.html</loc>
+    <lastmod>2024-02-22T21:30:32.837Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2022-05-02-juliaset-lambda.html</loc>
+    <lastmod>2024-02-22T21:30:32.793Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/posts/2022-08-08-keymaps/2022-08-08-keymaps.html</loc>
+    <lastmod>2024-02-22T21:30:32.793Z</lastmod>
+  </url>
+  <url>
+    <loc>https://imglib.github.io/imglib2-blog/index.html</loc>
+    <lastmod>2024-02-22T21:30:32.789Z</lastmod>
   </url>
 </urlset>
