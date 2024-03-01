@@ -1,10 +1,12 @@
 ---
 title: "N5 API Basics"
 description: "Basics of the N5 API for Java developers. This tutorial shows how to read and write array data and metadata using N5."
-author: "John Bogovic"
+author: 
+    - name: John Bogovic
+    - name: Caleb Hulbert
 date: "2/27/2024"
-date-modified: "2/27/2024"
-_notebooks-links: global
+date-modified: "3/1/2024"
+notebook-links: global
 image: n5-basic-tutorial-thumbnail.png
 categories:
   - hdf5
@@ -23,7 +25,7 @@ This tutorial for Java developers covers the most basic functionality of the [N5
 
 ## Readers and writers
 
-[`N5Reader`](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/N5Reader.java)s and 
+[`N5Reader`](https://github.com/saalfeldlab/n5/blob/3.1.2/src/main/java/org/janelia/saalfeldlab/n5/N5Reader.java)s and 
 [`N5Writer`](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/N5Writer.java)s form 
 the basis of the N5 API and allow you to read and write data, respectively. We generally recommend using an
 [`N5Factory`](https://github.com/saalfeldlab/n5-universe/blob/176ff469bb711eea3320535756b2e2594cb4eb61/src/main/java/org/janelia/saalfeldlab/n5/universe/N5Factory.java) to create readers and writers:
@@ -37,7 +39,7 @@ of the path you give it:
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#factory-types echo=true >}}
 
 In fact, it is possible to read with `N5Writer`s since every `N5Writer`
-is also an `N5Reader`, so from now on, we'll just be using the
+is also an `N5Reader`, so from now on we'll just be using the
 `n5Writer.`
 
 ::: {.callout-tip}
@@ -119,7 +121,7 @@ This example shows that data can be over written:
 
 is the group inside the container that will store the array. You can store an array at the
 root of a container by specifying `""` or `"/"` as the `groupPath`. In this case, the container
-will only be able to store one array ([see the warning above](#Arrays)).
+will only be able to store one array ([see the warning above](#arrays)).
 
 #### `blockSize` 
 
@@ -240,21 +242,17 @@ You can remove attributes by their name as well. To return the element that was 
 ### Working with Array Metadata
 
 Metadata used to describe arrays can be `get` and `set` the same as all other metadata. 
-However there are special [link](DatasetAttributes) methods to safely work with array metadata.
-`N5Reader.getDatasetAttributes` and `N5Writer.setDatasetAttributes` ensure the metadata is always a valid representation of array metadata.
+However there are special [`DatasetAttributes`](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/DatasetAttributes.java)
+methods to safely work with array metadata.
+[`N5Reader.getDatasetAttributes`](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/N5Reader.java#L276) and 
+[`N5Writer.setDatasetAttributes`](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/N5Writer.java#L134)
+ensure the metadata is always a valid representation of array metadata.
 Setting `DatasetAttributes` however should only be done when the array is initially saved to the dataset. This ensure the array metadata is tightly coupled with the data.
-For example, `set`ting array metadata should be done through the [N5Writer.createDataset](DatasetAttributes) methods (or indirectly through the [N5Utils.save]() [methods menthioned above](#Arrays))
+For example, `set`ting array metadata should be done through the
+[N5Writer.createDataset](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/N5Writer.java#L200) 
+methods (or indirectly through the `N5Utils.save` [methods mentioned above](#arrays))
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#array-metadata echo=true >}}
-
-::: {.callout-tip}
-## Try it!
-
-The attributes that describe arrays are also accessible using `getAttribute`, try running: 
-```java
-n5Writer.getAttribute("data", "dimensions", long[].class);
-```
-:::
 
 ::: {.callout-warning}
 ## Warning
@@ -266,6 +264,14 @@ The attributes that N5 uses to read arrays can be set with `setAttribute`, and m
 * `blockSize`
 * `dataType`
 * `compression`
+
+The attributes that describe arrays are also accessible using `getAttribute`, try running: 
+
+```java
+n5Writer.getAttribute("data", "dimensions", long[].class);
+```
+
+though using `getDatasetAttributes().getDimensions()` are generally recommended.
 :::
 
 ## What to try next
