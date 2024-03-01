@@ -21,6 +21,7 @@
 <item>
   <title>N5 API Basics</title>
   <dc:creator>John Bogovic</dc:creator>
+  <dc:creator>Caleb Hulbert</dc:creator>
   <link>https://imglib.github.io/imglib2-blog/posts/2024-02-27-n5-tutorial-basic/</link>
   <description><![CDATA[ Basics of the N5 API for Java developers. This tutorial shows how to read and write array data and metadata using N5. ]]></description>
   <category>hdf5</category>
