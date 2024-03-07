@@ -364,7 +364,7 @@
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>n5Writer<span class="op">.</span><span class="fu">deepList</span><span class="op">(</span><span class="st">""</span><span class="op">));</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>[data, dataNoCompression, lorum, lorum/ipsum, lorum/ipsum/dolor, lorum/ipsum/dolor/sit, lorum/ipsum/dolor/sit/amet, put-data-in-me, foo, foo/bar]</code></pre>
+<pre><code>[lorum, lorum/ipsum, lorum/ipsum/dolor, lorum/ipsum/dolor/sit, lorum/ipsum/dolor/sit/amet, foo, foo/bar]</code></pre>
 </div>
 </div></div>
 <div class="cell-container code-fold"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="996e162e" class="cell" data-execution_count="9">
@@ -411,13 +411,7 @@
 <pre><code>my-container.n5/data/1/1 is 1762 bytes
 my-container.n5/data/1/0 is 2012 bytes
 my-container.n5/data/0/1 is 1763 bytes
-my-container.n5/data/0/7 is 847 bytes
-my-container.n5/data/0/3 is 839 bytes
-my-container.n5/data/0/6 is 844 bytes
-my-container.n5/data/0/0 is 2020 bytes
-my-container.n5/data/0/4 is 846 bytes
-my-container.n5/data/0/2 is 840 bytes
-my-container.n5/data/0/5 is 847 bytes</code></pre>
+my-container.n5/data/0/0 is 2020 bytes</code></pre>
 </div>
 </div></div>
 <div class="cell-container code-fold"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="91647d07" class="cell" data-tags="[&quot;eight-blocks&quot;]" data-execution_count="13">
@@ -456,8 +450,8 @@ my-container.n5/data/0/5 is 847 bytes</code></pre>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">// what size are the blocks?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div></div>
-<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="846cae4c" class="cell" data-tags="[&quot;no-compression-blk-sizes&quot;]" data-code-folde="true" data-execution_count="15">
-<details open="" class="code-fold">
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="846cae4c" class="cell" data-tags="[&quot;no-compression-blk-sizes&quot;]" data-execution_count="15">
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">printBlocks</span><span class="op">(</span><span class="st">"my-container.n5/dataNoCompression"</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -528,23 +522,28 @@ my-container.n5/dataNoCompression/0/0 is 4108 bytes</code></pre>
 </details>
 </div></div>
 <div class="cell-container code-fold"><div class="cell-decorator"><pre>In [20]:</pre></div><div id="76639ba3" class="cell" data-tags="[&quot;fun-with-metadata&quot;]" data-execution_count="20">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FunWithMetadata <span class="op">{</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">String</span> name<span class="op">;</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> number<span class="op">;</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">double</span><span class="op">[]</span> data<span class="op">;</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="fu">FunWithMetadata</span><span class="op">(</span><span class="bu">String</span> name<span class="op">,</span> <span class="dt">int</span> number<span class="op">,</span> <span class="dt">double</span><span class="op">[]</span> data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">name</span> <span class="op">=</span> name<span class="op">;</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">number</span> <span class="op">=</span> number<span class="op">;</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">data</span> <span class="op">=</span> data<span class="op">;</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">toString</span><span class="op">(){</span></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">String</span><span class="op">.</span><span class="fu">format</span><span class="op">(</span> <span class="st">"FunWithMetadata{</span><span class="sc">%s</span><span class="st">(</span><span class="sc">%d</span><span class="st">): </span><span class="sc">%s</span><span class="st">}"</span><span class="op">,</span> </span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>            name<span class="op">,</span> number<span class="op">,</span> <span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>data<span class="op">));</span></span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>format<span class="op">:</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  html<span class="op">:</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    toc<span class="op">:</span> <span class="kw">true</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    html<span class="op">-</span>math<span class="op">-</span>method<span class="op">:</span> katex</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    css<span class="op">:</span> styles<span class="op">.</span><span class="fu">css</span><span class="co">//| code-fold: true</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FunWithMetadata <span class="op">{</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">String</span> name<span class="op">;</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> number<span class="op">;</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">double</span><span class="op">[]</span> data<span class="op">;</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="fu">FunWithMetadata</span><span class="op">(</span><span class="bu">String</span> name<span class="op">,</span> <span class="dt">int</span> number<span class="op">,</span> <span class="dt">double</span><span class="op">[]</span> data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">name</span> <span class="op">=</span> name<span class="op">;</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">number</span> <span class="op">=</span> number<span class="op">;</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">data</span> <span class="op">=</span> data<span class="op">;</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">toString</span><span class="op">(){</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">String</span><span class="op">.</span><span class="fu">format</span><span class="op">(</span> <span class="st">"FunWithMetadata{</span><span class="sc">%s</span><span class="st">(</span><span class="sc">%d</span><span class="st">): </span><span class="sc">%s</span><span class="st">}"</span><span class="op">,</span> </span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>            name<span class="op">,</span> number<span class="op">,</span> <span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>data<span class="op">));</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div></div>
 <div class="cell-container code-fold"><div class="cell-decorator"><pre>In [21]:</pre></div><div id="03dc0d4d" class="cell" data-tags="[&quot;rich-metadata&quot;]" data-execution_count="21">
