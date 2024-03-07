@@ -5,7 +5,7 @@ author:
     - name: John Bogovic
     - name: Caleb Hulbert
 date: "2/27/2024"
-date-modified: "3/1/2024"
+date-modified: "3/7/2024"
 notebook-links: global
 image: n5-basic-tutorial-thumbnail.png
 categories:
@@ -14,13 +14,19 @@ categories:
   - zarr
   - imglib2
   - tutorial
+format:
+  html:
+    toc: true
 ---
 
-This tutorial for Java developers covers the most basic functionality of the [N5 API](https://github.com/saalfeldlab/n5). We will learn about:
+This tutorial for Java developers covers the most basic functionality of the [N5 API](https://github.com/saalfeldlab/n5)
+for storing large, chunked n-dimensional arrays and arbitrary metadata. The N5 API and documentation typically refer to arrays as
+"datasets", [terminology inherited from HDF5](https://docs.hdfgroup.org/hdf5/develop/_g_l_s.html#title3) that we will use in this tutorial.
+We will learn about:
 
 * creating readers and writers
 * modifying and inspecting the hierarchy ("folder structure")
-* saving and loading array data
+* saving and loading datasets (arrays)
 * saving and loading metadata
 
 ## Readers and writers
@@ -64,17 +70,17 @@ and `deepList` recursively lists every descendent of the given group:
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#deep-list echo=true >}}
 
-Notice that these methods *only* give information about what groups are present and do not provide information about metadata or array data.
+Notice that these methods *only* give information about what groups are
+present and do not provide information about metadata or datasets.
 
 ::: {.callout-note}
 Some storage / access systems (AWS-S3) separate permissions for reading and listing, meaning
 it may be possible to access data but not list.
 :::
 
-## Arrays
+## Datasets
 
-N5 stores arrays in particular groups in the hierarchy. We call groups that contain arrays
-"datasets" - [terminology inherited from HDF5](https://docs.hdfgroup.org/hdf5/develop/_g_l_s.html#title3).
+N5 stores datasets (n-dimensional arrays) in particular groups in the hierarchy. 
 
 ::: {.callout-warning}
 Datasets must be terminal (leaf) nodes in the container hierarchy - i.e. a dataset can not contain
@@ -82,22 +88,22 @@ another group or dataset.  (Is this strictly true? May be confusing with names l
 :::
 
 We recommend using code from [n5-ij](https://github.com/saalfeldlab/n5-ij) or [n5-imglib2](https://github.com/saalfeldlab/n5-imglib2)
-to write arrays. The examples in this post will use the latter.
+to write datasets. The examples in this post will use the latter.
 
 The [`N5Utils`](https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java)
 class in n5-imglib2 has many useful methods, but in this post, we'll cover simple methods for reading and writing. First, 
 [`N5Utils.save`](https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java#L1440) 
-writes an array and required array metadata to the container at a group that you specify. The group will be created if it does
+writes a dataset and required metadata to the container at a group that you specify. The group will be created if it does
 not already exist. The parameters will be discussed in more detail below. 
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#n5-imglib2-save echo=true >}}
 
-You can write blocks in parallel by providing an [`ExecutorService`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html) to this variant of
+You can write in parallel by providing an [`ExecutorService`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html) to this variant of
 [`N5Utils.save`](https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java#L1514)
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#n5-imglib2-save-exec echo=true >}}
 
-Reading the array data from the container is also easy with
+Reading the dataset from the container is also easy with
 [`N5Utils.open`](https://github.com/saalfeldlab/n5-imglib2/blob/241dc2b503d01007ec6aec72dacecc9706f023ab/src/main/java/org/janelia/saalfeldlab/n5/imglib2/N5Utils.java#L428) :
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#n5-imglib2-open echo=true >}}
@@ -119,13 +125,13 @@ This example shows that data can be over written:
 
 #### `groupPath` 
 
-is the group inside the container that will store the array. You can store an array at the
+is the location inside the container that will store the dataset. You can store an dataset at the
 root of a container by specifying `""` or `"/"` as the `groupPath`. In this case, the container
-will only be able to store one array ([see the warning above](#arrays)).
+will only be able to store one dataset ([see the warning above](#datasets)).
 
 #### `blockSize` 
 
-is a very important parameter of an array. HDF5, N5, and Zarr all break up the arrays they store
+is a very important parameter. HDF5, N5, and Zarr all break up the datasets they store
 into equally sized blocks or "chunks". The block size parameter specifies the size of these blocks.
 
 For the example above, we stored an image of size `64 x 64` using blocks sized `32 x 32`. As a result, N5 uses
@@ -162,6 +168,8 @@ to store blocks without compression.
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#no-compression echo=true >}}
 
+{{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#no-compression-blk-sizes echo=true >}}
+
 Notice that blocks were previously ~1700-2000 bytes and are now ~4100 without compression.
 
 The available compression options at the time of this writing are:
@@ -176,7 +184,7 @@ The available compression options at the time of this writing are:
 
 ## Metadata
 
-Besides array data, N5 can also store rich structured metadata. This tutorial will discuss basic, low-level metadata operations.
+N5 can also store rich structured metadata in addition to array data. This tutorial will discuss basic, low-level metadata operations.
 Advanced operations and metadata standards may be described in a future tutorial.
 
 ### Basics
@@ -239,25 +247,25 @@ You can remove attributes by their name as well. To return the element that was 
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#remove-attrs echo=true >}}
 
-### Working with Array Metadata
+### Working with Dataset Metadata
 
-Metadata used to describe arrays can be `get` and `set` the same as all other metadata. 
+Metadata used to describe datasets can be `get` and `set` the same as all other metadata. 
 However there are special [`DatasetAttributes`](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/DatasetAttributes.java)
-methods to safely work with array metadata.
+methods to safely work with dataset metadata.
 [`N5Reader.getDatasetAttributes`](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/N5Reader.java#L276) and 
 [`N5Writer.setDatasetAttributes`](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/N5Writer.java#L134)
-ensure the metadata is always a valid representation of array metadata.
-Setting `DatasetAttributes` however should only be done when the array is initially saved to the dataset. This ensure the array metadata is tightly coupled with the data.
-For example, `set`ting array metadata should be done through the
+ensure the metadata is always a valid representation of dataset metadata.
+Setting `DatasetAttributes` however should only be done when the dataset is initially saved. This ensure the required metadata is tightly coupled with the data.
+For example, `set`ting dataset metadata should be done through the
 [N5Writer.createDataset](https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/N5Writer.java#L200) 
-methods (or indirectly through the `N5Utils.save` [methods mentioned above](#arrays))
+methods (or indirectly through the `N5Utils.save` [methods mentioned above](#datasets))
 
 {{< embed ../../_notebooks/N5-Basics-Tutorial.ipynb#array-metadata echo=true >}}
 
 ::: {.callout-warning}
 ## Warning
 
-The attributes that N5 uses to read arrays can be set with `setAttribute`, and modifying them could corrupt your data.
+The attributes that N5 uses to read datasets can be set with `setAttribute`, and modifying them could corrupt your data.
 **Do not manually set these attributes unless you absolutely know what you're doing!**
 
 * `dimensions`
@@ -265,7 +273,7 @@ The attributes that N5 uses to read arrays can be set with `setAttribute`, and m
 * `dataType`
 * `compression`
 
-The attributes that describe arrays are also accessible using `getAttribute`, try running: 
+The attributes that describe datasets are also accessible using `getAttribute`, try running: 
 
 ```java
 n5Writer.getAttribute("data", "dimensions", long[].class);
