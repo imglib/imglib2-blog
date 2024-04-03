@@ -17,7 +17,21 @@
 <width>144</width>
 </image>
 <generator>quarto-1.4.549</generator>
-<lastBuildDate>Tue, 27 Feb 2024 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 02 Apr 2024 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>N5 attribute paths</title>
+  <dc:creator>John Bogovic</dc:creator>
+  <dc:creator>Caleb Hulbert</dc:creator>
+  <link>https://imglib.github.io/imglib2-blog/posts/2024-04-02-n5-attribute-paths.html</link>
+  <description><![CDATA[ Learn to get and set arbitrary parts of an attribute hierarchy with the N5 API. ]]></description>
+  <category>n5</category>
+  <category>attributes</category>
+  <category>metadata</category>
+  <category>tutorial</category>
+  <guid>https://imglib.github.io/imglib2-blog/posts/2024-04-02-n5-attribute-paths.html</guid>
+  <pubDate>Tue, 02 Apr 2024 04:00:00 GMT</pubDate>
+  <media:content url="https://imglib.github.io/imglib2-blog/posts/2024-04-02-n5-attribute-paths-thumbnail.png" medium="image" type="image/png" height="64" width="144"/>
+</item>
 <item>
   <title>N5 API Basics</title>
   <dc:creator>John Bogovic</dc:creator>
