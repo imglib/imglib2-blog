@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Tobias Pietzsch">
-<meta name="dcterms.date" content="2022-10-30">
+<meta name="dcterms.date" content="2023-10-30">
 <meta name="description" content="Examples and performance discussion of Java Streams in ImgLib2.">
 
 <title>ImgLib2 news and tutorials - Adding Stream support to ImgLib2</title>
@@ -109,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="ImgLib2 news and tutorials - Adding Stream support to ImgLib2">
 <meta property="og:description" content="Examples and performance discussion of Java Streams in ImgLib2.">
-<meta property="og:image" content="https://imglib.github.io/imglib2-blog/posts/2022-10-30-streams/imglib2-logo.png">
+<meta property="og:image" content="https://imglib.github.io/imglib2-blog/posts/2023-10-30-streams/imglib2-logo.png">
 <meta property="og:site_name" content="ImgLib2 news and tutorials">
 </head>
 
@@ -190,7 +190,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">October 30, 2022</p>
+        <p class="date">October 30, 2023</p>
       </div>
     </div>
     
@@ -246,7 +246,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Encounter order of the streams is always compatible with <code>cursor()</code>. That is, <code>Views.flatIterable(img).stream()</code> yields elements in flat iteration order.</p>
 <p>Streams can be used, for example, to set all pixels of an <code>Img</code> to some <code>value</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="op">&lt;</span>T <span class="kw">extends</span> <span class="bu">Type</span><span class="op">&lt;</span>T<span class="op">&gt;&gt;</span> <span class="dt">void</span> <span class="fu">fill</span><span class="op">(</span>Img<span class="op">&lt;</span>T<span class="op">&gt;</span> img<span class="op">,</span> T value<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    img<span class="op">.</span><span class="fu">stream</span><span class="op">().</span><span class="fu">forEach</span><span class="op">(</span>t<span class="op">-&gt;</span>t<span class="op">.</span><span class="fu">set</span><span class="op">(</span>value<span class="op">));</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>to compute the sum of all values in an <code>Img</code>:</p>
@@ -283,7 +283,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The <code>localizable</code> and <code>localizing</code> variants are analogous to <code>cursor()</code> and <code>localizingCursor()</code> The Stream returned by <code>localizable</code> computes element locations only when asked to (with potentially higher per-element cost). The Stream returned by <code>localizing</code> tracks element locations always (in general faster, but potentially unnecessary).</p>
 <p>For example, to fill image pixels with position-dependent values, we would use <code>localizing</code>, because we require the position of each element.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> <span class="fu">fractal</span><span class="op">()</span> <span class="op">{</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    Img<span class="op">&lt;</span>UnsignedByteType<span class="op">&gt;</span> img <span class="op">=</span> ArrayImgs<span class="op">.</span><span class="fu">unsignedBytes</span><span class="op">(</span><span class="dv">1000</span><span class="op">,</span> <span class="dv">1000</span><span class="op">);</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    Streams<span class="op">.</span><span class="fu">localizing</span><span class="op">(</span>img<span class="op">)</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">parallel</span><span class="op">()</span></span>

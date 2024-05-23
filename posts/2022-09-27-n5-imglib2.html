@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -173,6 +173,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </div>
                           <div class="quarto-categories">
                 <div class="quarto-category">imglib2</div>
+                <div class="quarto-category">java</div>
                 <div class="quarto-category">n5</div>
                 <div class="quarto-category">hdf5</div>
                 <div class="quarto-category">zarr</div>
@@ -199,6 +200,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">March 6, 2024</p>
+      </div>
+    </div>
       
     </div>
     
@@ -217,30 +224,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In this notebook, we will learn how to work with the <a href="https://github.com/saalfeldlab/n5">N5 API</a> and <a href="https://imglib2.net">ImgLib2</a>.</p>
 <p>The N5 API unifies block-wise access to potentially very large <em>n</em>-dimensional data over a variety of storage backends. Those backends currently are the simple <a href="https://github.com/saalfeldlab/n5#file-system-specification">N5 format on the local filesystem</a>, <a href="https://github.com/saalfeldlab/n5-google-cloud">Google Cloud</a> and <a href="https://github.com/saalfeldlab/n5-aws-s3">AWS-S3</a>, the <a href="https://www.hdfgroup.org/solutions/hdf5/">HDF5 file format</a> and <a href="https://github.com/saalfeldlab/n5-zarr">Zarr</a>. The <a href="https://github.com/saalfeldlab/n5-imglib2">ImgLib2 bindings</a> use this API to make this data available as memory cached lazy cell images through ImgLib2.</p>
 <p>This notebook uses code and data examples from the <a href="https://www.janelia.org/sites/default/files/You%20%2B%20Janelia/Conferences/3.pdf">ImgLib2 large data tutorial</a> <a href="https://www.janelia.org/you-janelia/conferences/from-images-to-knowledge-with-imagej-friends">I2K2020 workshop</a> (<a href="https://github.com/saalfeldlab/i2k2020-imglib2-advanced">GitHub repository</a>).</p>
-<p>First let’s add the necessary dependencies. We will load the <a href="https://github.com/saalfeldlab/n5-ij"><code>n5-ij</code> module</a> which will transitively load <a href="https://imglib2.net">ImgLib2</a> and all the N5 API modules that we will be using in this notebook. It will also load <a href="https://imagej.nih.gov/ij/">ImageJ</a> which we will use to display data.</p>
+<p>First let’s add the necessary dependencies. We will load the <a href="https://github.com/saalfeldlab/n5-ij"><code>n5-ij</code> module</a> which will transitively load <a href="https://imglib2.net">ImgLib2</a> and all the N5 API modules that we will be using in this notebook. It will also load <a href="https://imagej.nih.gov/ij/">ImageJ</a> which we will use to display data. If this is the first time you are loading dependencies, running this can take quite a while. Next time, everything will be cached though…</p>
 <div id="6b5707ed" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>loadFromPOM</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>repository<span class="op">&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span>id<span class="op">&gt;</span>scijava<span class="op">.</span><span class="fu">public</span><span class="op">&lt;/</span>id<span class="op">&gt;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span>url<span class="op">&gt;</span>https<span class="op">:</span><span class="co">//maven.scijava.org/content/groups/public&lt;/url&gt;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;/</span>repository<span class="op">&gt;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>dependency<span class="op">&gt;</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span>groupId<span class="op">&gt;</span>org<span class="op">.</span><span class="fu">janelia</span><span class="op">.</span><span class="fu">saalfeldlab</span><span class="op">&lt;/</span>groupId<span class="op">&gt;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span>artifactId<span class="op">&gt;</span>n5<span class="op">&lt;/</span>artifactId<span class="op">&gt;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span>version<span class="op">&gt;</span><span class="fl">2.5.1</span><span class="op">&lt;/</span>version<span class="op">&gt;</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;/</span>dependency<span class="op">&gt;</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>dependency<span class="op">&gt;</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span>groupId<span class="op">&gt;</span>org<span class="op">.</span><span class="fu">janelia</span><span class="op">.</span><span class="fu">saalfeldlab</span><span class="op">&lt;/</span>groupId<span class="op">&gt;</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span>artifactId<span class="op">&gt;</span>n5<span class="op">-</span>ij<span class="op">&lt;/</span>artifactId<span class="op">&gt;</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;</span>version<span class="op">&gt;</span><span class="fl">3.2.2</span><span class="op">&lt;/</span>version<span class="op">&gt;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;/</span>dependency<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>mavenRepo scijava<span class="op">.</span><span class="fu">public</span> https<span class="op">:</span><span class="co">//maven.scijava.org/content/groups/public</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>maven org<span class="op">.</span><span class="fu">janelia</span><span class="op">.</span><span class="fu">saalfeldlab</span><span class="op">:</span>n5<span class="op">-</span>ij<span class="op">:</span><span class="fl">4.0.2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Now, we register a simple renderer that uses <a href="https://github.com/imglib/imglib2-ij/blob/master/src/main/java/net/imglib2/img/display/imagej/ImageJFunctions.java">ImgLib2’s ImageJ bridge</a> and <a href="https://github.com/SpencerPark/jupyter-jvm-basekernel/blob/master/src/main/java/io/github/spencerpark/jupyter/kernel/display/common/Image.java">Spencer Park’s image renderer</a> to render the first 2D slice of a <code>RandomAccessibleInterval</code> into the notebook. We also add a renderer for arrays and maps, because we want to list directories and attributes maps later.</p>
+<p>Next, we register a simple renderer that uses <a href="https://github.com/imglib/imglib2-ij/blob/master/src/main/java/net/imglib2/img/display/imagej/ImageJFunctions.java">ImgLib2’s ImageJ bridge</a> and <a href="https://github.com/SpencerPark/jupyter-jvm-basekernel/blob/master/src/main/java/io/github/spencerpark/jupyter/kernel/display/common/Image.java">Spencer Park’s image renderer</a> to render the first 2D slice of a <code>RandomAccessibleInterval</code> into the notebook. We also add a renderer for arrays and maps, because we want to list directories and attributes maps later.</p>
 <div id="dd875dfa" class="cell" data-execution_count="2">
-<details open="" class="code-fold">
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">com</span><span class="op">.</span><span class="im">google</span><span class="op">.</span><span class="im">gson</span><span class="op">.*;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">io</span><span class="op">.</span><span class="im">github</span><span class="op">.</span><span class="im">spencerpark</span><span class="op">.</span><span class="im">jupyter</span><span class="op">.</span><span class="im">kernel</span><span class="op">.</span><span class="im">display</span><span class="op">.</span><span class="im">common</span><span class="op">.*;</span></span>
@@ -250,26 +244,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">net</span><span class="op">.</span><span class="im">imglib2</span><span class="op">.*;</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">getKernelInstance</span><span class="op">().</span><span class="fu">getRenderer</span><span class="op">().</span><span class="fu">createRegistration</span><span class="op">(</span>RandomAccessibleInterval<span class="op">.</span><span class="fu">class</span><span class="op">)</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">preferring</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">IMAGE_PNG</span><span class="op">)</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">supporting</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">IMAGE_JPEG</span><span class="op">,</span> MIMEType<span class="op">.</span><span class="fu">IMAGE_GIF</span><span class="op">)</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">register</span><span class="op">((</span>rai<span class="op">,</span> context<span class="op">)</span> <span class="op">-&gt;</span> <span class="bu">Image</span><span class="op">.</span><span class="fu">renderImage</span><span class="op">(</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                ImageJFunctions<span class="op">.</span><span class="fu">wrap</span><span class="op">(</span>rai<span class="op">,</span> rai<span class="op">.</span><span class="fu">toString</span><span class="op">()).</span><span class="fu">getBufferedImage</span><span class="op">(),</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                context<span class="op">));</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">preferring</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">IMAGE_PNG</span><span class="op">)</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">supporting</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">IMAGE_JPEG</span><span class="op">,</span> MIMEType<span class="op">.</span><span class="fu">IMAGE_GIF</span><span class="op">)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">register</span><span class="op">((</span>rai<span class="op">,</span> context<span class="op">)</span> <span class="op">-&gt;</span> <span class="bu">Image</span><span class="op">.</span><span class="fu">renderImage</span><span class="op">(</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        ImageJFunctions<span class="op">.</span><span class="fu">wrap</span><span class="op">(</span>rai<span class="op">,</span> rai<span class="op">.</span><span class="fu">toString</span><span class="op">()).</span><span class="fu">getBufferedImage</span><span class="op">(),</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        context<span class="op">));</span></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">getKernelInstance</span><span class="op">().</span><span class="fu">getRenderer</span><span class="op">().</span><span class="fu">createRegistration</span><span class="op">(</span><span class="bu">String</span><span class="op">[].</span><span class="fu">class</span><span class="op">)</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">preferring</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_PLAIN</span><span class="op">)</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">supporting</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_HTML</span><span class="op">,</span> MIMEType<span class="op">.</span><span class="fu">TEXT_MARKDOWN</span><span class="op">)</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">register</span><span class="op">((</span>array<span class="op">,</span> context<span class="op">)</span> <span class="op">-&gt;</span> <span class="bu">Text</span><span class="op">.</span><span class="fu">renderCharSequence</span><span class="op">(</span><span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>array<span class="op">),</span> context<span class="op">));</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">preferring</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_PLAIN</span><span class="op">)</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">supporting</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_HTML</span><span class="op">,</span> MIMEType<span class="op">.</span><span class="fu">TEXT_MARKDOWN</span><span class="op">)</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">register</span><span class="op">((</span>array<span class="op">,</span> context<span class="op">)</span> <span class="op">-&gt;</span> <span class="bu">Text</span><span class="op">.</span><span class="fu">renderCharSequence</span><span class="op">(</span><span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>array<span class="op">),</span> context<span class="op">));</span></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">getKernelInstance</span><span class="op">().</span><span class="fu">getRenderer</span><span class="op">().</span><span class="fu">createRegistration</span><span class="op">(</span><span class="dt">long</span><span class="op">[].</span><span class="fu">class</span><span class="op">)</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">preferring</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_PLAIN</span><span class="op">)</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">supporting</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_HTML</span><span class="op">,</span> MIMEType<span class="op">.</span><span class="fu">TEXT_MARKDOWN</span><span class="op">)</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">register</span><span class="op">((</span>array<span class="op">,</span> context<span class="op">)</span> <span class="op">-&gt;</span> <span class="bu">Text</span><span class="op">.</span><span class="fu">renderCharSequence</span><span class="op">(</span><span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>array<span class="op">),</span> context<span class="op">));</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">preferring</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_PLAIN</span><span class="op">)</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">supporting</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_HTML</span><span class="op">,</span> MIMEType<span class="op">.</span><span class="fu">TEXT_MARKDOWN</span><span class="op">)</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">register</span><span class="op">((</span>array<span class="op">,</span> context<span class="op">)</span> <span class="op">-&gt;</span> <span class="bu">Text</span><span class="op">.</span><span class="fu">renderCharSequence</span><span class="op">(</span><span class="bu">Arrays</span><span class="op">.</span><span class="fu">toString</span><span class="op">(</span>array<span class="op">),</span> context<span class="op">));</span></span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fu">getKernelInstance</span><span class="op">().</span><span class="fu">getRenderer</span><span class="op">().</span><span class="fu">createRegistration</span><span class="op">(</span><span class="bu">Map</span><span class="op">.</span><span class="fu">class</span><span class="op">)</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">preferring</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_PLAIN</span><span class="op">)</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">supporting</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_HTML</span><span class="op">,</span> MIMEType<span class="op">.</span><span class="fu">TEXT_MARKDOWN</span><span class="op">)</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">register</span><span class="op">((</span>map<span class="op">,</span> context<span class="op">)</span> <span class="op">-&gt;</span> <span class="bu">Text</span><span class="op">.</span><span class="fu">renderCharSequence</span><span class="op">(</span>map<span class="op">.</span><span class="fu">toString</span><span class="op">(),</span> context<span class="op">));</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">preferring</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_PLAIN</span><span class="op">)</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">supporting</span><span class="op">(</span>MIMEType<span class="op">.</span><span class="fu">TEXT_HTML</span><span class="op">,</span> MIMEType<span class="op">.</span><span class="fu">TEXT_MARKDOWN</span><span class="op">)</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">register</span><span class="op">((</span>map<span class="op">,</span> context<span class="op">)</span> <span class="op">-&gt;</span> <span class="bu">Text</span><span class="op">.</span><span class="fu">renderCharSequence</span><span class="op">(</span>map<span class="op">.</span><span class="fu">toString</span><span class="op">(),</span> context<span class="op">));</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>We will now open N5 datasets from some sources as lazy-loading ImgLib2 cell images. For opening the N5 readers, we will use the helper class <a href="https://github.com/saalfeldlab/n5-ij/blob/eb9f2aa38e676c36ac79fc26ac8bec4905c1a7fb/src/main/java/org/janelia/saalfeldlab/n5/ij/N5Factory.java"><code>N5Factory</code></a> which parses the URL and/ or some magic byte in file headers to pick the right reader or writer for the various possible N5 backends. If you know which backend you are using, you should probably use the appropriate implementation directly, it’s not difficult.</p>
@@ -282,31 +276,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">org</span><span class="op">.</span><span class="im">janelia</span><span class="op">.</span><span class="im">saalfeldlab</span><span class="op">.</span><span class="im">n5</span><span class="op">.*;</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">org</span><span class="op">.</span><span class="im">janelia</span><span class="op">.</span><span class="im">saalfeldlab</span><span class="op">.</span><span class="im">n5</span><span class="op">.</span><span class="im">ij</span><span class="op">.*;</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">org</span><span class="op">.</span><span class="im">janelia</span><span class="op">.</span><span class="im">saalfeldlab</span><span class="op">.</span><span class="im">n5</span><span class="op">.</span><span class="im">imglib2</span><span class="op">.*;</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">/* make an N5 reader, we start with a public container on AWS S3 */</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> n5Url <span class="op">=</span> <span class="st">"https://janelia-cosem.s3.amazonaws.com/jrc_hela-2/jrc_hela-2.n5"</span><span class="op">;</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> n5Group <span class="op">=</span> <span class="st">"/em/fibsem-uint16"</span><span class="op">;</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> n5Dataset <span class="op">=</span> n5Group <span class="op">+</span> <span class="st">"/s4"</span><span class="op">;</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openReader</span><span class="op">(</span>n5Url<span class="op">);</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">/* open a dataset as a lazy loading ImgLib2 cell image */</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> RandomAccessibleInterval<span class="op">&lt;</span>UnsignedShortType<span class="op">&gt;</span> rai <span class="op">=</span> N5Utils<span class="op">.</span><span class="fu">open</span><span class="op">(</span>n5<span class="op">,</span> n5Dataset<span class="op">);</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">/* This is a 3D volume, so let's show the center slice */</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>rai<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">org</span><span class="op">.</span><span class="im">janelia</span><span class="op">.</span><span class="im">saalfeldlab</span><span class="op">.</span><span class="im">n5</span><span class="op">.</span><span class="im">universe</span><span class="op">.*;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">/* make an N5 reader, we start with a public container on AWS S3 */</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> n5Url <span class="op">=</span> <span class="st">"https://janelia-cosem.s3.amazonaws.com/jrc_hela-2/jrc_hela-2.n5"</span><span class="op">;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> n5Group <span class="op">=</span> <span class="st">"/em/fibsem-uint16"</span><span class="op">;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> n5Dataset <span class="op">=</span> n5Group <span class="op">+</span> <span class="st">"/s4"</span><span class="op">;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openReader</span><span class="op">(</span>n5Url<span class="op">);</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">/* open a dataset as a lazy loading ImgLib2 cell image */</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> RandomAccessibleInterval<span class="op">&lt;</span>UnsignedShortType<span class="op">&gt;</span> rai <span class="op">=</span> N5Utils<span class="op">.</span><span class="fu">open</span><span class="op">(</span>n5<span class="op">,</span> n5Dataset<span class="op">);</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">/* This is a 3D volume, so let's show the center slice */</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>rai<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>log4j:WARN No appenders could be found for logger (com.amazonaws.auth.AWSCredentialsProviderChain).
-log4j:WARN Please initialize the log4j system properly.
-log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Could not load AWS credentials, falling back to anonymous.</code></pre>
-</div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 <figure class="figure">
-<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-5-output-3.png" class="img-fluid figure-img"></p>
+<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -315,64 +302,69 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
 <div id="2f7ed32a" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> raiContrast <span class="op">=</span> Converters<span class="op">.</span><span class="fu">convert</span><span class="op">(</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>        rai<span class="op">,</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="op">(</span>a<span class="op">,</span> b<span class="op">)</span> <span class="op">-&gt;</span> b<span class="op">.</span><span class="fu">setReal</span><span class="op">(</span><span class="bu">Math</span><span class="op">.</span><span class="fu">max</span><span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span><span class="op">(</span><span class="dv">255</span><span class="op">,</span> <span class="dv">255</span> <span class="op">-</span> <span class="dv">255</span> <span class="op">*</span> <span class="op">(</span>a<span class="op">.</span><span class="fu">getRealDouble</span><span class="op">()</span> <span class="op">-</span> <span class="dv">26000</span><span class="op">)</span> <span class="op">/</span> <span class="dv">6000</span><span class="op">))),</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">new</span> <span class="fu">UnsignedByteType</span><span class="op">());</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>raiContrast<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">10</span> <span class="op">*</span> <span class="dv">4</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>raiContrast<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>raiContrast<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">10</span> <span class="op">*</span> <span class="dv">6</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> raiContrast <span class="op">=</span> Converters<span class="op">.</span><span class="fu">convert</span><span class="op">(</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    rai<span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>a<span class="op">,</span> b<span class="op">)</span> <span class="op">-&gt;</span> b<span class="op">.</span><span class="fu">setReal</span><span class="op">(</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span><span class="op">(</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>            <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span><span class="op">(</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                <span class="dv">255</span><span class="op">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                <span class="dv">255</span> <span class="op">-</span> <span class="dv">255</span> <span class="op">*</span> <span class="op">(</span>a<span class="op">.</span><span class="fu">getRealDouble</span><span class="op">()</span> <span class="op">-</span> <span class="dv">26000</span><span class="op">)</span> <span class="op">/</span> <span class="dv">6000</span><span class="op">))),</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">new</span> <span class="fu">UnsignedByteType</span><span class="op">());</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>raiContrast<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">10</span> <span class="op">*</span> <span class="dv">4</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>raiContrast<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>raiContrast<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">10</span> <span class="op">*</span> <span class="dv">6</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-6-output-1.jpeg" class="img-fluid figure-img"></p>
+<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-5-output-1.jpeg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-6-output-2.jpeg" class="img-fluid figure-img"></p>
+<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-5-output-2.jpeg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-6-output-3.jpeg" class="img-fluid figure-img"></p>
+<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-5-output-3.jpeg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>6e32749d-48d5-4c52-be9b-41c43bae02f4</code></pre>
+<pre><code>b3145473-3a3a-49a5-a392-9c5101325063</code></pre>
 </div>
 </div>
 <p>We can list the attributes and their types of every group or dataset, and read any of them into matching types:</p>
 <div id="cbc28959" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> groupAttributes <span class="op">=</span> n5<span class="op">.</span><span class="fu">listAttributes</span><span class="op">(</span>n5Group<span class="op">);</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> datasetAttributes <span class="op">=</span> n5<span class="op">.</span><span class="fu">listAttributes</span><span class="op">(</span>n5Dataset<span class="op">);</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**"</span> <span class="op">+</span> n5Group <span class="op">+</span> <span class="st">"** attributes are ```"</span> <span class="op">+</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        groupAttributes<span class="op">.</span><span class="fu">toString</span><span class="op">().</span><span class="fu">replace</span><span class="op">(</span><span class="st">", "</span><span class="op">,</span> <span class="st">",</span><span class="sc">\n</span><span class="st">"</span><span class="op">).</span><span class="fu">replace</span><span class="op">(</span><span class="st">"{"</span><span class="op">,</span> <span class="st">"{</span><span class="sc">\n</span><span class="st">"</span><span class="op">)</span> <span class="op">+</span> <span class="st">"```"</span><span class="op">,</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text/markdown"</span><span class="op">);</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**"</span> <span class="op">+</span> n5Dataset <span class="op">+</span> <span class="st">"** attributes are ```"</span> <span class="op">+</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        datasetAttributes<span class="op">.</span><span class="fu">toString</span><span class="op">().</span><span class="fu">replace</span><span class="op">(</span><span class="st">", "</span><span class="op">,</span> <span class="st">",</span><span class="sc">\n</span><span class="st">"</span><span class="op">).</span><span class="fu">replace</span><span class="op">(</span><span class="st">"{"</span><span class="op">,</span> <span class="st">"{</span><span class="sc">\n</span><span class="st">"</span><span class="op">)</span> <span class="op">+</span> <span class="st">"```"</span><span class="op">,</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text/markdown"</span><span class="op">);</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> n5Version <span class="op">=</span> n5<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span><span class="st">"/"</span><span class="op">,</span> <span class="st">"n5"</span><span class="op">,</span> <span class="bu">String</span><span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> dimensions <span class="op">=</span> n5<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>n5Dataset<span class="op">,</span> <span class="st">"dimensions"</span><span class="op">,</span> <span class="dt">long</span><span class="op">[].</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> compression <span class="op">=</span> n5<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>n5Dataset<span class="op">,</span> <span class="st">"compression"</span><span class="op">,</span> <span class="bu">Compression</span><span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> dataType <span class="op">=</span> n5<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>n5Dataset<span class="op">,</span> <span class="st">"dataType"</span><span class="op">,</span> DataType<span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>n5Version<span class="op">);</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>dimensions<span class="op">);</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>compression<span class="op">);</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>dataType<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> groupAttributes <span class="op">=</span> n5<span class="op">.</span><span class="fu">listAttributes</span><span class="op">(</span>n5Group<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> datasetAttributes <span class="op">=</span> n5<span class="op">.</span><span class="fu">listAttributes</span><span class="op">(</span>n5Dataset<span class="op">);</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**"</span> <span class="op">+</span> n5Group <span class="op">+</span> <span class="st">"** attributes are ```"</span> <span class="op">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        groupAttributes<span class="op">.</span><span class="fu">toString</span><span class="op">().</span><span class="fu">replace</span><span class="op">(</span><span class="st">", "</span><span class="op">,</span> <span class="st">",</span><span class="sc">\n</span><span class="st">"</span><span class="op">).</span><span class="fu">replace</span><span class="op">(</span><span class="st">"{"</span><span class="op">,</span> <span class="st">"{</span><span class="sc">\n</span><span class="st">"</span><span class="op">)</span> <span class="op">+</span> <span class="st">"```"</span><span class="op">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text/markdown"</span><span class="op">);</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**"</span> <span class="op">+</span> n5Dataset <span class="op">+</span> <span class="st">"** attributes are ```"</span> <span class="op">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        datasetAttributes<span class="op">.</span><span class="fu">toString</span><span class="op">().</span><span class="fu">replace</span><span class="op">(</span><span class="st">", "</span><span class="op">,</span> <span class="st">",</span><span class="sc">\n</span><span class="st">"</span><span class="op">).</span><span class="fu">replace</span><span class="op">(</span><span class="st">"{"</span><span class="op">,</span> <span class="st">"{</span><span class="sc">\n</span><span class="st">"</span><span class="op">)</span> <span class="op">+</span> <span class="st">"```"</span><span class="op">,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text/markdown"</span><span class="op">);</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> n5Version <span class="op">=</span> n5<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span><span class="st">"/"</span><span class="op">,</span> <span class="st">"n5"</span><span class="op">,</span> <span class="bu">String</span><span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> dimensions <span class="op">=</span> n5<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>n5Dataset<span class="op">,</span> <span class="st">"dimensions"</span><span class="op">,</span> <span class="dt">long</span><span class="op">[].</span><span class="fu">class</span><span class="op">);</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> compression <span class="op">=</span> n5<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>n5Dataset<span class="op">,</span> <span class="st">"compression"</span><span class="op">,</span> <span class="bu">Compression</span><span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> dataType <span class="op">=</span> n5<span class="op">.</span><span class="fu">getAttribute</span><span class="op">(</span>n5Dataset<span class="op">,</span> <span class="st">"dataType"</span><span class="op">,</span> DataType<span class="op">.</span><span class="fu">class</span><span class="op">);</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>n5Version<span class="op">);</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>dimensions<span class="op">);</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>compression<span class="op">);</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>dataType<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display cell-output-markdown">
 <p><strong>/em/fibsem-uint16</strong> attributes are <code>{ pixelResolution=class java.lang.Object, multiscales=class [Ljava.lang.Object;, n5=class java.lang.String, scales=class [Ljava.lang.Object;, axes=class [Ljava.lang.String;, name=class java.lang.String, units=class [Ljava.lang.String;}</code></p>
@@ -387,102 +379,119 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
 <pre><code>[750, 100, 398]</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<pre><code>org.janelia.saalfeldlab.n5.GzipCompression@673562cc</code></pre>
+<pre><code>org.janelia.saalfeldlab.n5.GzipCompression@78c84e2f</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <pre><code>uint16</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>6c5c9bc2-ea28-4685-9658-a8fbf3c65df4</code></pre>
+<pre><code>02cf0988-e2fc-483a-8286-9a4ca22aa8db</code></pre>
 </div>
 </div>
 <p>Let’s save the contrast adjusted uin8 version of the volume into three N5 supported containers (N5, Zarr, and HDF5), parallelize writing for N5 and Zarr:</p>
 <div id="cbb005e7" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">nio</span><span class="op">.</span><span class="im">file</span><span class="op">.*;</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* create a temporary directory */</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>Path tmpDir <span class="op">=</span> Files<span class="op">.</span><span class="fu">createTempFile</span><span class="op">(</span><span class="st">""</span><span class="op">,</span> <span class="st">""</span><span class="op">);</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>Files<span class="op">.</span><span class="fu">delete</span><span class="op">(</span>tmpDir<span class="op">);</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>Files<span class="op">.</span><span class="fu">createDirectories</span><span class="op">(</span>tmpDir<span class="op">);</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> tmpDirStr <span class="op">=</span> tmpDir<span class="op">.</span><span class="fu">toString</span><span class="op">();</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>tmpDirStr<span class="op">);</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">/* get the dataset attributes (dataType, compression, blockSize, dimensions) */</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> attributes <span class="op">=</span> n5<span class="op">.</span><span class="fu">getDatasetAttributes</span><span class="op">(</span>n5Dataset<span class="op">);</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">/* use 10 threads to parallelize copy */</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> exec <span class="op">=</span> <span class="bu">Executors</span><span class="op">.</span><span class="fu">newFixedThreadPool</span><span class="op">(</span><span class="dv">10</span><span class="op">);</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">/* save this dataset into a filsystem N5 container */</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> n5Out <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openFSWriter</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.n5"</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    N5Utils<span class="op">.</span><span class="fu">save</span><span class="op">(</span>raiContrast<span class="op">,</span> n5Out<span class="op">,</span> n5Dataset<span class="op">,</span> attributes<span class="op">.</span><span class="fu">getBlockSize</span><span class="op">(),</span> attributes<span class="op">.</span><span class="fu">getCompression</span><span class="op">(),</span> exec<span class="op">);</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co">/* save this dataset into a filesystem Zarr container */</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> zarrOut <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openZarrWriter</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.zarr"</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    N5Utils<span class="op">.</span><span class="fu">save</span><span class="op">(</span>raiContrast<span class="op">,</span> zarrOut<span class="op">,</span> n5Dataset<span class="op">,</span> attributes<span class="op">.</span><span class="fu">getBlockSize</span><span class="op">(),</span> attributes<span class="op">.</span><span class="fu">getCompression</span><span class="op">(),</span> exec<span class="op">);</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">/* save this dataset into an HDF5 file, parallelization does not help here */</span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> hdf5Out <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openHDF5Writer</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.hdf5"</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    N5Utils<span class="op">.</span><span class="fu">save</span><span class="op">(</span>raiContrast<span class="op">,</span> hdf5Out<span class="op">,</span> n5Dataset<span class="op">,</span> attributes<span class="op">.</span><span class="fu">getBlockSize</span><span class="op">(),</span> attributes<span class="op">.</span><span class="fu">getCompression</span><span class="op">());</span></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co">/* shot down the executor service */</span></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>exec<span class="op">.</span><span class="fu">shutdown</span><span class="op">();</span></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>Files<span class="op">.</span><span class="fu">list</span><span class="op">(</span>tmpDir<span class="op">).</span><span class="fu">map</span><span class="op">(</span>a <span class="op">-&gt;</span> a<span class="op">.</span><span class="fu">toString</span><span class="op">()).</span><span class="fu">toArray</span><span class="op">(</span><span class="bu">String</span><span class="op">[]::</span><span class="kw">new</span><span class="op">));</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">nio</span><span class="op">.</span><span class="im">file</span><span class="op">.*;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* create a temporary directory */</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>Path tmpDir <span class="op">=</span> Files<span class="op">.</span><span class="fu">createTempFile</span><span class="op">(</span><span class="st">""</span><span class="op">,</span> <span class="st">""</span><span class="op">);</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>Files<span class="op">.</span><span class="fu">delete</span><span class="op">(</span>tmpDir<span class="op">);</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>Files<span class="op">.</span><span class="fu">createDirectories</span><span class="op">(</span>tmpDir<span class="op">);</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="dt">var</span> tmpDirStr <span class="op">=</span> tmpDir<span class="op">.</span><span class="fu">toString</span><span class="op">();</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>tmpDirStr<span class="op">);</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">/* get the dataset attributes (dataType, compression, blockSize, dimensions) */</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> attributes <span class="op">=</span> n5<span class="op">.</span><span class="fu">getDatasetAttributes</span><span class="op">(</span>n5Dataset<span class="op">);</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">/* use 10 threads to parallelize copy */</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="dt">final</span> <span class="dt">var</span> exec <span class="op">=</span> <span class="bu">Executors</span><span class="op">.</span><span class="fu">newFixedThreadPool</span><span class="op">(</span><span class="dv">10</span><span class="op">);</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">/* save this dataset into a filsystem N5 container */</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> n5Out <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openFSWriter</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.n5"</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  N5Utils<span class="op">.</span><span class="fu">save</span><span class="op">(</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>      raiContrast<span class="op">,</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>      n5Out<span class="op">,</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>      n5Dataset<span class="op">,</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>      attributes<span class="op">.</span><span class="fu">getBlockSize</span><span class="op">(),</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>      attributes<span class="op">.</span><span class="fu">getCompression</span><span class="op">(),</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>      exec<span class="op">);</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="co">/* save this dataset into a filesystem Zarr container */</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> zarrOut <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openZarrWriter</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.zarr"</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>  N5Utils<span class="op">.</span><span class="fu">save</span><span class="op">(</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>      raiContrast<span class="op">,</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>      zarrOut<span class="op">,</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>      n5Dataset<span class="op">,</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>      attributes<span class="op">.</span><span class="fu">getBlockSize</span><span class="op">(),</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>      attributes<span class="op">.</span><span class="fu">getCompression</span><span class="op">(),</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>      exec<span class="op">);</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="co">/* save this dataset into an HDF5 file, parallelization does not help here */</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> hdf5Out <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openHDF5Writer</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.hdf5"</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>  N5Utils<span class="op">.</span><span class="fu">save</span><span class="op">(</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>      raiContrast<span class="op">,</span></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>      hdf5Out<span class="op">,</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>      n5Dataset<span class="op">,</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>      attributes<span class="op">.</span><span class="fu">getBlockSize</span><span class="op">(),</span></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>      attributes<span class="op">.</span><span class="fu">getCompression</span><span class="op">());</span></span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a><span class="co">/* shot down the executor service */</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>exec<span class="op">.</span><span class="fu">shutdown</span><span class="op">();</span></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span><span class="op">(</span>Files<span class="op">.</span><span class="fu">list</span><span class="op">(</span>tmpDir<span class="op">).</span><span class="fu">map</span><span class="op">(</span>a <span class="op">-&gt;</span> a<span class="op">.</span><span class="fu">toString</span><span class="op">()).</span><span class="fu">toArray</span><span class="op">(</span><span class="bu">String</span><span class="op">[]::</span><span class="kw">new</span><span class="op">));</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<pre><code>/tmp/303790804299695858</code></pre>
+<pre><code>/tmp/12301290762951248139</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<pre><code>[/tmp/303790804299695858/test.hdf5, /tmp/303790804299695858/test.n5, /tmp/303790804299695858/test.zarr]</code></pre>
+<pre><code>[/tmp/12301290762951248139/test.n5, /tmp/12301290762951248139/test.zarr, /tmp/12301290762951248139/test.hdf5]</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>d55081b3-d9fd-4208-9bae-181c9253712a</code></pre>
+<pre><code>19331be9-edd2-413e-b2ad-47bc7627187b</code></pre>
 </div>
 </div>
 <p>Now let us look at them and see if they all contain the same data:</p>
 <div id="3e0d635a" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openReader</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.n5"</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">final</span> RandomAccessibleInterval<span class="op">&lt;</span>UnsignedByteType<span class="op">&gt;</span> rai <span class="op">=</span> N5Utils<span class="op">.</span><span class="fu">open</span><span class="op">(</span>n5<span class="op">,</span> n5Dataset<span class="op">);</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>rai<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openReader</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.zarr"</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">final</span> RandomAccessibleInterval<span class="op">&lt;</span>UnsignedByteType<span class="op">&gt;</span> rai <span class="op">=</span> N5Utils<span class="op">.</span><span class="fu">open</span><span class="op">(</span>n5<span class="op">,</span> n5Dataset<span class="op">);</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>rai<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span>    </span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openReader</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.hdf5"</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">final</span> RandomAccessibleInterval<span class="op">&lt;</span>UnsignedByteType<span class="op">&gt;</span> rai <span class="op">=</span> N5Utils<span class="op">.</span><span class="fu">open</span><span class="op">(</span>n5<span class="op">,</span> n5Dataset<span class="op">);</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>rai<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span>        </span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openReader</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.n5"</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">final</span> RandomAccessibleInterval<span class="op">&lt;</span>UnsignedByteType<span class="op">&gt;</span> rai <span class="op">=</span> N5Utils<span class="op">.</span><span class="fu">open</span><span class="op">(</span>n5<span class="op">,</span> n5Dataset<span class="op">);</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>rai<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openReader</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.zarr"</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">final</span> RandomAccessibleInterval<span class="op">&lt;</span>UnsignedByteType<span class="op">&gt;</span> rai <span class="op">=</span> N5Utils<span class="op">.</span><span class="fu">open</span><span class="op">(</span>n5<span class="op">,</span> n5Dataset<span class="op">);</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>rai<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span>    </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">final</span> <span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openReader</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.hdf5"</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">final</span> RandomAccessibleInterval<span class="op">&lt;</span>UnsignedByteType<span class="op">&gt;</span> rai <span class="op">=</span> N5Utils<span class="op">.</span><span class="fu">open</span><span class="op">(</span>n5<span class="op">,</span> n5Dataset<span class="op">);</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">display</span><span class="op">(</span>Views<span class="op">.</span><span class="fu">hyperSlice</span><span class="op">(</span>rai<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> rai<span class="op">.</span><span class="fu">dimension</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">),</span> <span class="st">"image/jpeg"</span><span class="op">);</span>        </span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-9-output-1.jpeg" class="img-fluid figure-img"></p>
+<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-8-output-1.jpeg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-9-output-2.jpeg" class="img-fluid figure-img"></p>
+<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-8-output-2.jpeg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-9-output-3.jpeg" class="img-fluid figure-img"></p>
+<p><img src="2022-09-27-n5-imglib2_files/figure-html/cell-8-output-3.jpeg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -491,16 +500,16 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
 <div id="3d38edc0" class="cell" data-scrolled="true" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openWriter</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.n5"</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    n5<span class="op">.</span><span class="fu">remove</span><span class="op">();</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openWriter</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.zarr"</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    n5<span class="op">.</span><span class="fu">remove</span><span class="op">();</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openWriter</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.hdf5"</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    n5<span class="op">.</span><span class="fu">remove</span><span class="op">();</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>Files<span class="op">.</span><span class="fu">delete</span><span class="op">(</span>tmpDir<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openWriter</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.n5"</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  n5<span class="op">.</span><span class="fu">remove</span><span class="op">();</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openWriter</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.zarr"</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  n5<span class="op">.</span><span class="fu">remove</span><span class="op">();</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span><span class="dt">var</span> n5 <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openWriter</span><span class="op">(</span>tmpDirStr <span class="op">+</span> <span class="st">"/test.hdf5"</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  n5<span class="op">.</span><span class="fu">remove</span><span class="op">();</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>Files<span class="op">.</span><span class="fu">delete</span><span class="op">(</span>tmpDir<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
@@ -637,6 +646,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/imglib\.github\.io\/imglib2-blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -671,7 +698,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');

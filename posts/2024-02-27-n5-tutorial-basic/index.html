@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="John Bogovic">
 <meta name="author" content="Caleb Hulbert">
 <meta name="dcterms.date" content="2024-02-27">
-<meta name="description" content="Basics of the N5 API for Java developers. This tutorial shows how to read and write array data and metadata using N5.">
+<meta name="description" content="Basics of the N5 API for Java developers. This tutorial shows how to read and write n-dimensional image data and structured metadata into HDF5, N5, and Zarr containers using the N5 API.">
 
 <title>ImgLib2 news and tutorials - N5 API Basics</title>
 <style>
@@ -138,7 +138,7 @@ window.Quarto = {
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="ImgLib2 news and tutorials - N5 API Basics">
-<meta property="og:description" content="Basics of the N5 API for Java developers. This tutorial shows how to read and write array data and metadata using N5.">
+<meta property="og:description" content="Basics of the N5 API for Java developers. This tutorial shows how to read and write n-dimensional image data and structured metadata into HDF5, N5, and Zarr containers using the N5 API.">
 <meta property="og:image" content="https://imglib.github.io/imglib2-blog/posts/2024-02-27-n5-tutorial-basic/n5-basic-tutorial-thumbnail.png">
 <meta property="og:site_name" content="ImgLib2 news and tutorials">
 <meta property="og:image:height" content="301">
@@ -198,7 +198,7 @@ window.Quarto = {
       <div class="quarto-title-block"><div><h1 class="title">N5 API Basics</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button" data-quarto-source-url="https://github.com/imglib/imglib2-blog/blob/main/posts/2024-02-27-n5-tutorial-basic/index.qmd">View Source</a></li></ul></div></div>
                   <div>
         <div class="description">
-          Basics of the N5 API for Java developers. This tutorial shows how to read and write array data and metadata using N5.
+          Basics of the N5 API for Java developers. This tutorial shows how to read and write n-dimensional image data and structured metadata into HDF5, N5, and Zarr containers using the N5 API.
         </div>
       </div>
                           <div class="quarto-categories">
@@ -232,7 +232,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">March 7, 2024</p>
+        <p class="date-modified">April 23, 2024</p>
       </div>
     </div>
       
@@ -271,16 +271,16 @@ window.Quarto = {
 
 
 
-<p>This tutorial for Java developers covers the most basic functionality of the <a href="https://github.com/saalfeldlab/n5">N5 API</a> for storing large, chunked n-dimensional arrays and arbitrary metadata. The N5 API and documentation typically refer to arrays as “datasets”, <a href="https://docs.hdfgroup.org/hdf5/develop/_g_l_s.html#title3">terminology inherited from HDF5</a> that we will use in this tutorial. We will learn about:</p>
+<p>This tutorial for Java developers covers the most basic functionality of the <a href="https://github.com/saalfeldlab/n5">N5 API</a> for storing large, chunked n-dimensional image data and structured metadata. The N5 API and documentation refer to n-dimensional images as “datasets”, <a href="https://docs.hdfgroup.org/hdf5/develop/_g_l_s.html#title3">terminology inherited from HDF5</a>. We will use this terminology in this tutorial. If you are used to work with Python and Numpy, an n-dimensional image or dataset is what you know as an <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html"><code>ndarray</code></a>. We will learn about:</p>
 <ul>
 <li>creating readers and writers</li>
 <li>modifying and inspecting the hierarchy (“folder structure”)</li>
-<li>saving and loading datasets (arrays)</li>
+<li>saving and loading datasets</li>
 <li>saving and loading metadata</li>
 </ul>
 <section id="readers-and-writers" class="level2">
 <h2 class="anchored" data-anchor-id="readers-and-writers">Readers and writers</h2>
-<p><a href="https://github.com/saalfeldlab/n5/blob/3.1.2/src/main/java/org/janelia/saalfeldlab/n5/N5Reader.java"><code>N5Reader</code></a>s and <a href="https://github.com/saalfeldlab/n5/blob/8e14d529276b57e1817ff21df9cac9fb1a517d59/src/main/java/org/janelia/saalfeldlab/n5/N5Writer.java"><code>N5Writer</code></a>s form the basis of the N5 API and allow you to read and write data, respectively. We generally recommend using an <a href="https://github.com/saalfeldlab/n5-universe/blob/176ff469bb711eea3320535756b2e2594cb4eb61/src/main/java/org/janelia/saalfeldlab/n5/universe/N5Factory.java"><code>N5Factory</code></a> to create readers and writers:</p>
+<p><a href="https://github.com/saalfeldlab/n5/blob/n5-3.2.0/src/main/java/org/janelia/saalfeldlab/n5/N5Reader.java"><code>N5Reader</code></a>s and <a href="https://github.com/saalfeldlab/n5/blob/n5-3.2.0/src/main/java/org/janelia/saalfeldlab/n5/N5Writer.java"><code>N5Writer</code></a>s form the basis of the N5 API and allow you to read and write data, respectively. We generally recommend using an <a href="https://github.com/saalfeldlab/n5-universe/blob/n5-universe-1.4.2/src/main/java/org/janelia/saalfeldlab/n5/universe/N5Factory.java"><code>N5Factory</code></a> to create readers and writers:</p>
 <div class="quarto-embed-nb-cell">
 <div id="89830e81" class="cell" data-tags="[&quot;make-reader-writer&quot;]" data-execution_count="4">
 <details open="" class="code-fold">
@@ -306,7 +306,7 @@ window.Quarto = {
 </details>
 </div>
 </div>
-<p>The N5 API gives you access to a number of different storage formats: HDF5, Zarr, and N5’s own format. <code>N5Factory</code>’s convenience methods try to infer the storage format from the extension of the path you give it:</p>
+<p>The N5 API gives you access to a number of different storage formats: HDF5, Zarr, and N5’s own format. <code>N5Factory</code>’s convenience methods try to infer the storage format from the extension of the path you provide:</p>
 <div class="quarto-embed-nb-cell">
 <div id="8a6621e1" class="cell" data-tags="[&quot;factory-types&quot;]" data-execution_count="5">
 <details open="" class="code-fold">
@@ -317,7 +317,7 @@ window.Quarto = {
 </details>
 </div>
 </div>
-<p>In fact, it is possible to read with <code>N5Writer</code>s since every <code>N5Writer</code> is also an <code>N5Reader</code>, so from now on we’ll just be using the <code>n5Writer.</code></p>
+<p>In fact, it is possible to read with <code>N5Writer</code>s since every <code>N5Writer</code> is also an <code>N5Reader</code>, so from now on we’ll just be using the <code>n5Writer</code>.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -918,6 +918,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/imglib\.github\.io\/imglib2-blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -952,7 +970,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
