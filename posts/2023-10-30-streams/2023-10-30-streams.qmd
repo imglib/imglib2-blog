@@ -1,6 +1,6 @@
 ---
 aliases:
-- /imglib2/stream-api/java/2022/10/30/streams
+- /imglib2/stream-api/java/2023/10/30/streams
 author: Tobias Pietzsch
 badges: true
 branch: master
@@ -8,9 +8,9 @@ categories:
 - imglib2
 - stream-api
 - java
-date: '2022-10-30'
+date: '2023-10-30'
 description: Examples and performance discussion of Java Streams in ImgLib2.
-output-file: 2022-10-30-streams.html
+output-file: 2023-10-30-streams.html
 title: Adding Stream support to ImgLib2
 toc: true
 format:
@@ -48,10 +48,10 @@ and allows to operate on pixel values.
 
 Encounter order of the streams is always compatible with `cursor()`. That is, `Views.flatIterable(img).stream()` yields elements in flat iteration order.
 
-Streams can be used, for example, to set all pixels of an `Img` to some `value`: 
+Streams can be used, for example, to set all pixels of an `Img` to some `value`:
 ```java
 static <T extends Type<T>> void fill(Img<T> img, T value) {
-    
+
     img.stream().forEach(t->t.set(value));
 }
 ```
@@ -73,7 +73,7 @@ static double max(Img<DoubleType> img) {
             .max().getAsDouble();
 }
 ```
-In particular the latter two examples, where the terminal operation is some form of reduction, allow for more convenient parallelization than the alternatives. Computing the maximum value in parallel is as simple as 
+In particular the latter two examples, where the terminal operation is some form of reduction, allow for more convenient parallelization than the alternatives. Computing the maximum value in parallel is as simple as
 ```java
 static double max(Img<DoubleType> img) {
 
@@ -100,7 +100,7 @@ The `localizable` and `localizing` variants are analogous to `cursor()` and `loc
 For example, to fill image pixels with position-dependent values, we would use `localizing`, because we require the position of each element.
 ```java
 static void fractal() {
-    
+
     Img<UnsignedByteType> img = ArrayImgs.unsignedBytes(1000, 1000);
     Streams.localizing(img)
             .parallel()
@@ -148,7 +148,7 @@ Likewise, the `.map(LocalizableSampler::copy)` in the `printMax()` example above
 Note, that already the current implementation takes care not to re-use proxies across parallel execution, so threads of a `parallelStream()` will not interfere.
 
 ## Implementation details
-* Both, pure-value streams and value-and-position streams make use of `LocalizableSpliterator<T>`. `LocalizableSpliterator<T>` extends `Spliterator` and `Localizable`, similiar to `Cursor` extending `Iterator` and `Localizable`. 
+* Both, pure-value streams and value-and-position streams make use of `LocalizableSpliterator<T>`. `LocalizableSpliterator<T>` extends `Spliterator` and `Localizable`, similiar to `Cursor` extending `Iterator` and `Localizable`.
 * There are default `LocalizableSpliterator<T>` (and `RealLocalizableSpliterator<T>`) implementations based on `Cursor<T>` (and `RealCursor<T>`). Therefore, the new streams API works for every `IterableRealInterval`, without the need to touch existing implementations.
 * Additionally, the standard `Img` classes have custom `LocalizableSpliterator<T>`, that leverage knowledge of underlying storage for improved performance.
 
