@@ -2,12 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.54">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Stephan Saalfeld">
+<meta name="dcterms.date" content="2022-06-05">
+<meta name="description" content="Follow these instructions to setup the IJava jupyter kernel by Spencer Park.">
 
-<title>ImgLib2 – ImgLib2 news and tutorials</title>
+<title>ImgLib2 news and tutorials - Setup the IJava jupyter kernel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +36,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -57,22 +60,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./favicon.ico" rel="icon">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -102,10 +106,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="ImgLib2 – ImgLib2 news and tutorials">
-<meta property="og:description" content="">
-<meta property="og:image" content="https://imglib.github.io/imglib2-blog/imglib2-logo.png">
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="ImgLib2 news and tutorials - Setup the IJava jupyter kernel">
+<meta property="og:description" content="Follow these instructions to setup the IJava jupyter kernel by Spencer Park.">
+<meta property="og:image" content="https://imglib.github.io/imglib2-blog/posts/imglib2-logo.png">
 <meta property="og:site_name" content="ImgLib2 news and tutorials">
 <meta property="og:image:height" content="320">
 <meta property="og:image:width" content="279">
@@ -114,25 +118,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./imglib2-logo-header.png" alt="" class="navbar-logo">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../imglib2-logo-header.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">ImgLib2 news and tutorials</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./about.html" aria-current="page"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">ImgLib2</span></a>
   </li>  
   <li class="nav-item compact">
@@ -146,92 +150,128 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
+          <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">Setup the IJava jupyter kernel</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://github.com/imglib/imglib2-blog/blob/main/posts/2022-06-05-setup-ijava-jupyter-kernel.md"><i class="bi"></i> Code</button></div></div>
+                  <div>
+        <div class="description">
+          Follow these instructions to setup the IJava jupyter kernel by Spencer Park.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">jupyter</div>
+                <div class="quarto-category">ijava</div>
+                <div class="quarto-category">jshell</div>
+                <div class="quarto-category">java</div>
+                <div class="quarto-category">kernel</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Stephan Saalfeld </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 5, 2022</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<div class="quarto-about-solana column-body">
-  <div class="about-entity">
-    <div class="entity-contents">
-      <header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">ImgLib2</h1>
-</div>
-<div class="quarto-title-meta">
-  </div>
-</header> <div class="about-links">
-  <a href="https://fosstodon.org/@imglib2" class="about-link" rel="" target="">
-    <i class="bi bi-mastodon"></i>
-     <span class="about-link-text">Mastodon</span>
-  </a>
-  <a href="https://github.com/imglib2" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">Github</span>
-  </a>
-</div>
-      <div class="about-contents"><main class="content" id="quarto-document-content">
-<p>ImgLib2 is a general-purpose, multidimensional image and data processing library.</p>
-<p>It provides a unified API to work with discrete and continuous n-dimensional data. This API is interface driven and therefore extensible at will.</p>
-<p>ImgLib2 includes implementations of standard numeric and non-numeric data types (8-bit unsigned integer, 32-bit floating point, …) as well as a number of less typical data types (complex 64-bit floating point, 64-bit ARGB, base pairs, …). Data values can be accessed directly or through on-the-fly converters or multi-variate functions.</p>
-<p>For discrete data (images, n-dimensional arrays), ImgLib2 implements a variety of memory layouts, data generation, loading, and caching strategies, including data linearized into single primitive arrays, series of arrays, n-dimensional arrays of arrays (“cells”), stored in memory, generated or loaded from disk on demand, and cached in memory or on disk. Coordinates and values can be accessed directly or through on-the-fly views that invert or permute axes, generate hyperslices or stack slices top higher dimensional datasets, collapse dimensions into vectors</p>
-<p>For continuous data (functions, n-dimensional interpolants), ImgLib2 implements a variety of interpolators, geometric transformations, and generator functions. Coordinates and values can be accessed directly or transformed on-the-fly.</p>
-<p>Need a quick start? Install OpenJDK and maven:</p>
-<pre><code>sudo apt install openjdk-16-jdk maven</code></pre>
-<p>Then check out <a href="https://github.com/bigdataviewer/bigdataviewer-vistools">BigDataViewer vistools</a>:</p>
-<pre><code>git clone https://github.com/bigdataviewer/bigdataviewer-vistools.git</code></pre>
-<p>Then start JShell in the BigDataViewer vistools project directory:</p>
-<pre><code>cd bigdataviewer-vistools
-mvn compile com.github.johnpoth:jshell-maven-plugin:1.3:run</code></pre>
-<p>Then try out this code snippet:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">bdv</span><span class="op">.</span><span class="im">util</span><span class="op">.*;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">net</span><span class="op">.</span><span class="im">imglib2</span><span class="op">.</span><span class="im">position</span><span class="op">.</span><span class="im">FunctionRealRandomAccessible</span><span class="op">;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">net</span><span class="op">.</span><span class="im">imglib2</span><span class="op">.</span><span class="im">type</span><span class="op">.</span><span class="im">numeric</span><span class="op">.</span><span class="im">integer</span><span class="op">.</span><span class="im">IntType</span><span class="op">;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">net</span><span class="op">.</span><span class="im">imglib2</span><span class="op">.</span><span class="im">util</span><span class="op">.</span><span class="im">Intervals</span><span class="op">;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>BdvFunctions<span class="op">.</span><span class="fu">show</span><span class="op">(</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">new</span> FunctionRealRandomAccessible<span class="op">&lt;</span>IntType<span class="op">&gt;(</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span><span class="op">,</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>x<span class="op">,</span> y<span class="op">)</span> <span class="op">-&gt;</span> <span class="op">{</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">double</span> v <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> x<span class="op">.</span><span class="fu">getDoublePosition</span><span class="op">(</span><span class="dv">0</span><span class="op">),</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        d <span class="op">=</span> x<span class="op">.</span><span class="fu">getDoublePosition</span><span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> <span class="op">(;</span> i <span class="op">&lt;</span> <span class="dv">64</span> <span class="op">&amp;&amp;</span> v <span class="op">&lt;</span> <span class="dv">4096</span><span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">final</span> <span class="dt">double</span> e <span class="op">=</span> c <span class="op">*</span> c <span class="op">-</span> d <span class="op">*</span> d<span class="op">;</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        d <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> c <span class="op">*</span> d<span class="op">;</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> e <span class="op">+</span> <span class="fl">0.2</span><span class="op">;</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        d <span class="op">+=</span> <span class="fl">0.6</span><span class="op">;</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span><span class="op">(</span>c <span class="op">*</span> c <span class="op">+</span> d <span class="op">*</span> d<span class="op">);</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        <span class="op">++</span>i<span class="op">;</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>      y<span class="op">.</span><span class="fu">set</span><span class="op">(</span>i<span class="op">);</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">},</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    IntType<span class="op">::</span><span class="kw">new</span><span class="op">),</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  Intervals<span class="op">.</span><span class="fu">createMinMax</span><span class="op">(-</span><span class="dv">1</span><span class="op">,</span> <span class="op">-</span><span class="dv">1</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span><span class="op">),</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">""</span><span class="op">,</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  BdvOptions<span class="op">.</span><span class="fu">options</span><span class="op">().</span><span class="fu">is2D</span><span class="op">()).</span><span class="fu">setDisplayRange</span><span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">64</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
-</main></div>
-    </div>
-    <img src="imglib2-logo.png" class="about-image
-  rounded " style="width: 15em;">
-  </div>
-</div>
- <!-- /main -->
+
+
+
+<p>In this blog, we will show code snippets and examples to make the best use of <a href="https://github.com/imglib/imglib2">ImgLib2</a>, <a href="https://github.com/bigdataviewer/bigdataviewer-core">BigDataViewer</a>, and friends. ImgLib2 is written to be fast and we will run code that needs to be compiled, so we cannot use any of the various interpreted scripting languages like Python, Groovy, or Javascript. Instead, we will use the <a href="https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8">JShell tool</a> that you can use directly in a terminal or through <a href="https://github.com/SpencerPark/IJava">Spencer Park’s IJava jupyter kernel</a>. You can also follow these tutorials in your own Java project and use your preferred IDE, but Jupyter notebooks are a great teaching tool. Since jupyter is written in Python and most popular with the Python community, let’s follow their ways and first thing create a virtual environment with conda. The lack of version controlled dependency management for Python projects makes it necessary that practically every project must run in a container or virtual environment because the dependencies of different projects almost inevitably collide. Conda is the most popular of several attempts to address this situation. Conda cannot currently be installed from the default Ubuntu repositories, so much about that, but the <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html">installation instructions</a> are tolerable, there is a PPA. Now let’s create an environment for jupyter:</p>
+<pre><code>conda create -n jshell-jupyter python=3
+conda init bash
+conda activate jshell-jupyter
+conda install jupyter</code></pre>
+<p>You will also need a modern Java and Maven on your system, so if you have not yet done so, install it:</p>
+<pre><code>sudo apt install openjdk-17-jdk maven</code></pre>
+<p>The original IJava kernel currently does not build with Java 17 or 18, so we use <a href="https://github.com/hanslovsky">Philipp Hanslovsky’s</a> fork and build and install both the kernel installer and the IJava Jupyter kernel:</p>
+<pre><code>git clone https://github.com/hanslovsky/Jupyter-kernel-installer-gradle.git
+cd Jupyter-kernel-installer-gradle/
+git checkout try-upgrade-gradle
+./gradlew publishToMavenLocal
+
+cd ..
+git clone https://github.com/hanslovsky/IJava.git
+cd IJava/
+git checkout hanslovsky/gradle-7.4.2
+./gradlew installKernel</code></pre>
+<p>Now check if the kernel is installed, this should print something like this</p>
+<pre><code>jupyter kernelspec list
+
+Available kernels:
+  java       /home/saalfeld/.local/share/jupyter/kernels/java
+  python3    /home/saalfeld/anaconda3/envs/jshell-jupyter/share/jupyter/kernels/python3</code></pre>
+<p>You can now start the jupyter notebook server</p>
+<pre><code>jupyter notebook --kernel=java</code></pre>
+<p>And experiment with the examples. <a href="https://github.com/SpencerPark/IJava">Spencer Park’s IJava jupyter kernel</a> makes it very easy to include dependencies. You can include the relevant snippets from a Maven POM into a tagged code block, e.g.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>%%loadFromPOM</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">repository</span>&gt;</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">id</span>&gt;scijava.public&lt;/<span class="kw">id</span>&gt;</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">url</span>&gt;https://maven.scijava.org/content/groups/public&lt;/<span class="kw">url</span>&gt;</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">repository</span>&gt;</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dependency</span>&gt;</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">groupId</span>&gt;sc.fiji&lt;/<span class="kw">groupId</span>&gt;</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">artifactId</span>&gt;bigdataviewer-vistools&lt;/<span class="kw">artifactId</span>&gt;</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">version</span>&gt;1.0.0-beta-29&lt;/<span class="kw">version</span>&gt;</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">dependency</span>&gt;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If you prefer to run <a href="https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8">JShell</a> directly, you can pull in the dependencies from a complete Maven POM with John Pooth’s Maven Jshell plugin</p>
+<pre><code>mvn compile com.github.johnpoth:jshell-maven-plugin:1.3:run</code></pre>
+<p>Happy JShelling!</p>
+<p>P.S.:</p>
+<p>The original IJava kernel currently does not build with Java 17 or 18, so if you prefer this over the above fork, or if you do not care about the latest greatest language features in Java 17, then the easiest at this time is to use OpenJDK-11. If you don’t have it yet, install it via conda:</p>
+<pre><code>conda install openjdk
+conda install -c conda-forge maven</code></pre>
+<p>However, this may take a day of solving environments, so you can also install it globally:</p>
+<pre><code>sudo apt install openjdk-11-jdk maven</code></pre>
+<p>If you have other versions installed, you can switch between them with the <code>alternatives</code> tool:</p>
+<pre><code>sudo update-alternatives --config java
+sudo update-alternatives --config javac</code></pre>
+<p>Now check out the original IJava and build and install the kernel IJava Jupyter kernel following <a href="https://github.com/SpencerPark/IJava#install-from-source">the installation instructions</a> or:</p>
+<pre><code>git clone https://github.com/SpencerPark/IJava.git
+cd IJava/
+./gradlew installKernel
+jupyter kernelspec list</code></pre>
+<p>Done.</p>
+
+
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -252,6 +292,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     
@@ -260,7 +307,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -292,47 +350,58 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
     });
-    clipboardModal.on('success', onCopySuccess);
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/imglib\.github\.io\/imglib2-blog");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
         }
       }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
     }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -367,11 +436,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
+      return note.innerHTML;
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
