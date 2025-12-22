@@ -17,7 +17,19 @@
 <width>144</width>
 </image>
 <generator>quarto-1.5.54</generator>
-<lastBuildDate>Tue, 02 Apr 2024 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 22 Dec 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>N5 Development 2025</title>
+  <dc:creator>John Bogovic</dc:creator>
+  <link>https://imglib.github.io/imglib2-blog/posts/2025-12-22-n5-shard-dev/</link>
+  <description><![CDATA[ Developer-focused summary of N5 development toward sharding and zarr v3. ]]></description>
+  <category>n5</category>
+  <category>zarr</category>
+  <category>imglib2</category>
+  <category>java</category>
+  <guid>https://imglib.github.io/imglib2-blog/posts/2025-12-22-n5-shard-dev/</guid>
+  <pubDate>Mon, 22 Dec 2025 05:00:00 GMT</pubDate>
+</item>
 <item>
   <title>N5 attribute paths</title>
   <dc:creator>John Bogovic</dc:creator>
@@ -94,6 +106,17 @@
   <category>jupyter</category>
   <category>notebook</category>
   <guid>https://imglib.github.io/imglib2-blog/posts/2022-09-04-how-to-display-imglib2-data.html</guid>
+  <pubDate>Wed, 14 Sep 2022 04:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>TEST</title>
+  <dc:creator>Stephan Saalfeld</dc:creator>
+  <link>https://imglib.github.io/imglib2-blog/posts/2024-10-19-test.html</link>
+  <description><![CDATA[ Render ImgLib2 data into notebook objects. ]]></description>
+  <category>imglib2</category>
+  <category>jupyter</category>
+  <category>notebook</category>
+  <guid>https://imglib.github.io/imglib2-blog/posts/2024-10-19-test.html</guid>
   <pubDate>Wed, 14 Sep 2022 04:00:00 GMT</pubDate>
 </item>
 <item>
