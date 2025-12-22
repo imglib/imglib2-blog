@@ -1,0 +1,130 @@
+---
+title: "N5 Development 2025"
+description: "Developer-focused summary of N5 development toward sharding and zarr v3."
+author: 
+    - name: John Bogovic
+date: "12/22/2025"
+notebook-links: global
+categories:
+  - n5
+  - zarr
+  - imglib2
+  - java
+format:
+  html:
+    toc: true
+---
+
+This post for Java developers covers new, in-progress development for the [N5 API](https://github.com/saalfeldlab/n5)
+that supports sharding and Zarr v3 and is intended as a migration guide to the new versions.
+
+Some specific noteworthy changes are called out in green boxes.
+
+::: {.callout-important}
+This information is subject to change as development progresses and new alpha versions are
+released.
+:::
+
+Examples below require the latest alpha releases at the time of this writing:
+
+* n5-4.0.0-alpha-6
+* n5-imglib2-7.1.0-alpha-6
+* n5-universe:2.4.0-alpha-6
+* n5-zarr-2.0.0-alpha-4
+* n5-zstandard-2.0.0-alpha-4
+
+## Creating a sharded dataset 
+
+Use `new N5Factory().openWriter(StorageFormat.ZARR, "demo.zarr"))` to create a Zarr v3 writer.
+Alternatively, you can manually create a new `ZarrV3KeyValueWriter`.
+
+```java
+// parameters
+String datasetPath = "";
+long[] imageDimensions = { 128, 128, 64 };
+DataType dataType = DataType.INT32;
+
+int[] blockSize = {32, 32, 32};
+int[] shardSize = {128, 128, 128};
+ZstandardCompression compression = new ZstandardCompression();
+
+// zarr -> zarr3
+// use StorageFormat.Zarr2 for zarr v2
+// try block auto-closes the writer
+try (N5Writer writer = new N5Factory().openWriter(StorageFormat.ZARR, "demo.zarr")) {
+
+    // create a dataset attributes instance to specify the
+    // dataset parameters with a specified shard size
+    // a default set of codecs are created
+    ZarrV3DatasetAttributes specAttributes = ZarrV3DatasetAttributes
+        .builder(imageDimensions, dataType)
+        .blockSize(blockSize)
+        .shardShape(shardSize)
+        .compression(compression)
+        .build();
+
+    // use this instance for subsequent calls to readBlock(s) writeBlock(s)
+    DatasetAttributes actualAttributes = writer.createDataset(datasetPath, specAttributes);
+}
+```
+
+Note that N5Writers and Zarr 2 writers do not support sharding.
+
+::: {.callout-tip}
+## `createDataset` returns a `DatasetAttributes`
+A noteworthy API change. 
+
+Different storage formats (HDF5, N5, Zarr) have different feature sets and have different
+default sets of codecs. N5 may need to convert a generic `DatasetAttributes` to a more specific
+type, e.g. `ZarrV3DatasetAttributes`.  This more specific type is returned by `createDataset`.
+
+The motivation for this change was to enable subsequent calls to `readBlock` / `writeBlocks`
+to avoid repeating the overhead this conversion because these methods are usually called 
+repeatedly.
+:::
+
+## High-level writing
+
+At the time of this writing, there are no changes to the methods of N5Utils. 
+Methods support writing to shards and will optimize write operations appropriately - 
+performing only one write operation per shard.
+
+Note the use of the `saveBlock` method (instead of `save`) because it takes a
+`DatasetAttributes` instance, and current `save` methods do not enable specification of a
+sharded dataset (at this time).
+
+```java
+RandomAccessibleInterval<IntType> img; 
+
+N5Utils.saveBlock(img, writer, datasetPath, actualAttributes);
+```
+
+## Low-level writing
+
+There is a new method `writeBlocks` that takes an array of `DataBlock`s and writes them all.
+Applications should generally call `writeBlocks` once for all blocks belonging to a shard.
+At this time, developers are responsible for determining which blocks belong to what shard,
+though a helper method may be added.
+
+```java
+DataBlock<int[]>[] blocks;
+writer.writeBlocks(datasetPath, actualAttributes, blocks);
+```
+
+The method `writeBlock` still exists ands works for sharded datasets.
+
+```java
+DataBlock<int[]> block;
+writer.writeBlock(datasetPath, actualAttributes, block);
+```
+
+
+::: {.callout-tip}
+## prefer `writeBlocks` to `writeBlock`
+A noteworthy API change. 
+
+Using `writeBlocks` will allow N5 to optimize write operations by grouping blocks by the shard
+they belong to (if relevant). Calls to `writeBlock` will still work (if called serially)
+
+Note: it is the caller's responsibility to ensure that parallel calls to `writeBlock`.
+:::
