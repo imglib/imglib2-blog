@@ -17,8 +17,8 @@ format:
 
 This is an updated version of a post from [December 22, 2025](../2025-12-22-n5-shard-dev/index.qmd).
 
-This post for Java developers covers new, in-progress development for the [N5 API](https://github.com/saalfeldlab/n5)
-that supports sharding and Zarr v3 and is intended as a migration guide to the new versions. Some specific noteworthy changes
+This post for Java developers covers the recent updates to the [N5 API](https://github.com/saalfeldlab/n5), adding support
+for sharding and Zarr v3 and, is intended as a migration guide to the new versions. Some specific noteworthy changes
 are called out in green boxes.
 
 Examples below require the latest releases at the time of this writing:
@@ -83,10 +83,10 @@ This table lists the extensions for each storage format.
 
 | Storage Format | Extensions      |
 |---------|------------------------|
-| Zarr v3 | `.zarr`, `.zarr3`      |
-| Zarr v2 | `.zarr`, `.zarr2`      |
+| Zarr v3 | `.zarr`                |
+| Zarr v2 | `.zarr`                |
 | N5      | `.n5`                  |
-| HDF5    | `.h5`, `.hdf`, `.hdf5` |
+| HDF5    | `.h5`, `.hdf5`         |
 
 For example:
 ```java
@@ -108,7 +108,7 @@ factory.openWriter("demo.n5"))
 ## Creating a sharded dataset 
 
 Zarr v3 is the only storage format that supports sharding, so to create a sharded dataset, we need a Zarr v3 writer. Use `new
-N5Factory().openWriter(StorageFormat.ZARR3, "demo.zarr"))` to create a Zarr v3 writer, or urse a `ZarrV3KeyValueWriter`
+N5Factory().openWriter(StorageFormat.ZARR3, "demo.zarr"))` to create a Zarr v3 writer, or use a `ZarrV3KeyValueWriter`
 constructor to create one manually.
 
 ```java
@@ -209,7 +209,7 @@ Developers generally do not have to worry about the details of Codecs, the one e
 The [`DataCodec`](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/DataCodec.java)
 interface the the analogue of Zarr v3's `bytes -> bytes` codec.
 The [`Compression`](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/Compression.java)
-interface, a pre-existing N5 interterface, is now a special case of a `DataCodec`. It is otherwise backward-compatible and may
+interface, a pre-existing N5 interface, is now a special case of a `DataCodec`. It is otherwise backward-compatible and may
 still be used.
 
 
