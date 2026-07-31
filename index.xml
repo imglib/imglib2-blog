@@ -109,17 +109,6 @@
   <pubDate>Wed, 14 Sep 2022 04:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>TEST</title>
-  <dc:creator>Stephan Saalfeld</dc:creator>
-  <link>https://imglib.github.io/imglib2-blog/posts/2024-10-19-test.html</link>
-  <description><![CDATA[ Render ImgLib2 data into notebook objects. ]]></description>
-  <category>imglib2</category>
-  <category>jupyter</category>
-  <category>notebook</category>
-  <guid>https://imglib.github.io/imglib2-blog/posts/2024-10-19-test.html</guid>
-  <pubDate>Wed, 14 Sep 2022 04:00:00 GMT</pubDate>
-</item>
-<item>
   <title>User-configurable Keymaps</title>
   <dc:creator>Tobias Pietzsch</dc:creator>
   <link>https://imglib.github.io/imglib2-blog/posts/2022-08-08-keymaps/2022-08-08-keymaps.html</link>
