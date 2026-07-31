@@ -1,5 +1,7 @@
 # ImgLib2 Blog
 
+**This page is retired and will no longer be updated. Instead visit: [imglib2-www](https://imglib.github.io/imglib2-www)**
+
 https://imglib.github.io/imglib2-blog/
 
 ## How to contribute

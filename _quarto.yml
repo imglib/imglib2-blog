@@ -3,6 +3,14 @@ project:
 
 website:
   title: "ImgLib2 news and tutorials"
+  announcement:
+    icon: info-circle
+    dismissable: false
+    type: warning
+    position: above-navbar
+    content: |
+      This blog is retired and is no longer updated. Visit
+      [imglib2.net](https://imglib2.net/) for current ImgLib2 documentation.
   image: imglib2-logo.png
   favicon: favicon.ico
   navbar:
@@ -20,7 +28,7 @@ website:
   site-url: https://imglib.github.io/imglib2-blog
 format:
   html:
-    theme: cosmo 
+    theme: cosmo
     css: styles.css
     code-fold: show
     code-overflow: wrap
