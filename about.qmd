@@ -9,7 +9,7 @@ about:
       href: https://fosstodon.org/@imglib2
     - icon: github
       text: Github
-      href: https://github.com/imglib2
+      href: https://github.com/imglib
 format:
   html:
     code-tools: false
