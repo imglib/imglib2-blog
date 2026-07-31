@@ -16,59 +16,117 @@ format:
 ---
 
 This post for Java developers covers new, in-progress development for the [N5 API](https://github.com/saalfeldlab/n5)
-that supports sharding and Zarr v3 and is intended as a migration guide to the new versions.
+that supports sharding and Zarr v3 and is intended as a migration guide to the new versions. Some specific noteworthy changes
+are called out in green boxes.
 
-Some specific noteworthy changes are called out in green boxes.
+Examples below require the latest releases at the time of this writing:
 
-::: {.callout-important}
-This information is subject to change as development progresses and new alpha versions are
-released.
-:::
+* n5-4.0.2
+* n5-imglib2-8.0.0
+* n5-universe:3.0.2
+* n5-zarr-2.0.1
+* n5-zstandard-2.0.0
 
-Examples below require the latest alpha releases at the time of this writing:
+## Nomenclature
 
-* n5-4.0.0-alpha-6
-* n5-imglib2-7.1.0-alpha-6
-* n5-universe:2.4.0-alpha-6
-* n5-zarr-2.0.0-alpha-4
-* n5-zstandard-2.0.0-alpha-4
+* "Chunk" refers to the smallest (innermost) subdivision of the array
+* "Block" refers to the largest (outermost) subdivision of the array
+    * refers to shards when the array is sharded
+    * identical to chunks when the array is unsharded
+* "Storage format" refers to one of (HDF5, N5, Zarr v2, Zarr v3).
+* "Backend" refers to the file or object store on which the format is written (e.g., filesystem, aws-s3, google-cloud).
+
+
+## Summary
+
+Some changes to:
+
+* N5Factory
+
+New low-level methods:
+
+* N5Reader
+    * readChunk
+    * readChunks
+* N5Writer
+    * writeChunk
+    * writeChunks
+
+## N5Factory
+
+The `openReader` and `openWriter` methods in `N5Factory` return an `N5Reader` or `N5Writer`, respectively.
+The storage format is determined by (in order):
+
+1. The user-specified storage format.
+2. Existing data at the specified location.
+3. Extension of the given location.
+
+### Storage format specification
+
+The changes for the
+[`StorageFormat`](https://github.com/saalfeldlab/n5-universe/blob/d290226f5a38ac6c6d5f0e2f8f026b2768ad7d74/src/main/java/org/janelia/saalfeldlab/n5/universe/StorageFormat.java) enum have to do with Zarr.
+
+`StorageFormat.ZARR2`: is new and always refers to Zarr v2. N5Factory will fail if this is specified, but the URI points to a Zarr v3 hierarchy
+
+`StorageFormat.ZARR3`: is new and always refers to Zarr v3. N5Factory will fail if this is specified, but the URI points to a Zarr v2 hierarchy
+
+`StorageFormat.ZARR`: in past versions this always referred to Zarr v2. Now, if this is specified and points to an existing Zarr
+v2 or v3 hierarchy, then N5Factory will return an appropriate reader or writer. If this is specified for a writer when no Zarr
+hierarchy exists, then a N5Factory will return a Zarr v3 writer.
+
+
+### Storage format extenstions
+
+This table lists the extensions for each storage format.
+
+| Storage Format | Extensions      |
+|---------|------------------------|
+| Zarr v3 | `.zarr`, `.zarr3`      |
+| Zarr v2 | `.zarr`, `.zarr2`      |
+| N5      | `.n5`                  |
+| HDF5    | `.h5`, `.hdf`, `.hdf5` |
+
+For example:
+```java
+N5Factory factory = new N5Factory();
+
+// opens a Zarr V2 writer
+factory.openWriter(StorageFormat.ZARR2, "demo.weird-extension"))
+
+// opens a Zarr v3 writer if the specified folder is empty or does not exist
+factory.openWriter("demo-empty.zarr"))
+
+// opens a Zarr v2 writer if the specified folder has v2 data
+factory.openWriter("demo-existing-v2.zarr"))
+
+// opens an n5 writer
+factory.openWriter("demo.n5"))
+```
 
 ## Creating a sharded dataset 
 
-Use `new N5Factory().openWriter(StorageFormat.ZARR, "demo.zarr"))` to create a Zarr v3 writer.
-Alternatively, you can manually create a new `ZarrV3KeyValueWriter`.
+Zarr v3 is the only storage format that supports sharding, so to create a sharded dataset, we need a Zarr v3 writer. Use `new
+N5Factory().openWriter(StorageFormat.ZARR3, "demo.zarr"))` to create a Zarr v3 writer, or urse a `ZarrV3KeyValueWriter`
+constructor to create one manually.
 
 ```java
-// parameters
-String datasetPath = "";
-long[] imageDimensions = { 128, 128, 64 };
-DataType dataType = DataType.INT32;
-
-int[] blockSize = {32, 32, 32};
-int[] shardSize = {128, 128, 128};
-ZstandardCompression compression = new ZstandardCompression();
-
-// zarr -> zarr3
-// use StorageFormat.Zarr2 for zarr v2
 // try block auto-closes the writer
-try (N5Writer writer = new N5Factory().openWriter(StorageFormat.ZARR, "demo.zarr")) {
+try (N5Writer writer = new N5Factory().openWriter(StorageFormat.ZARR3, "demo.zarr")) {
 
     // create a dataset attributes instance to specify the
     // dataset parameters with a specified shard size
-    // a default set of codecs are created
     ZarrV3DatasetAttributes specAttributes = ZarrV3DatasetAttributes
-        .builder(imageDimensions, dataType)
-        .blockSize(blockSize)
-        .shardShape(shardSize)
-        .compression(compression)
+        // image dimensions and data type are required
+        .builder(new long[]{128, 128, 64}, DataType.INT32)
+        .blockSize(new int[]{32, 32, 32})
+        .shardSize(new int[]{128, 128, 128})
+        .compression(new ZstandardCompression())
         .build();
 
-    // use this instance for subsequent calls to readBlock(s) writeBlock(s)
-    DatasetAttributes actualAttributes = writer.createDataset(datasetPath, specAttributes);
+    // use this instance for subsequent calls to readChunk(s) writeChunk(s)
+    DatasetAttributes actualAttributes = writer.createDataset("", specAttributes);
 }
 ```
-
-Note that N5Writers and Zarr 2 writers do not support sharding.
 
 ::: {.callout-tip}
 ## `createDataset` returns a `DatasetAttributes`
@@ -78,16 +136,14 @@ Different storage formats (HDF5, N5, Zarr) have different feature sets and have 
 default sets of codecs. N5 may need to convert a generic `DatasetAttributes` to a more specific
 type, e.g. `ZarrV3DatasetAttributes`.  This more specific type is returned by `createDataset`.
 
-The motivation for this change was to enable subsequent calls to `readBlock` / `writeBlocks`
-to avoid repeating the overhead this conversion because these methods are usually called 
-repeatedly.
+The motivation for this change was to enable subsequent calls to `readChunk` / `writeChunks`
+to avoid repeating the overhead this conversion because these methods are often called
+repeatedly with the same `DatasetAttributes`.
 :::
 
 ## High-level writing
 
-At the time of this writing, there are no changes to the methods of N5Utils. 
-Methods support writing to shards and will optimize write operations appropriately - 
-performing only one write operation per shard.
+There are no changes to the methods of N5Utils, and they support reading from and writing to shards.
 
 Note the use of the `saveBlock` method (instead of `save`) because it takes a
 `DatasetAttributes` instance, and current `save` methods do not enable specification of a
@@ -95,20 +151,40 @@ sharded dataset (at this time).
 
 ```java
 RandomAccessibleInterval<IntType> img; 
-
 N5Utils.saveBlock(img, writer, datasetPath, actualAttributes);
 ```
 
+
 ## Low-level writing
 
-There is a new method `writeBlocks` that takes an array of `DataBlock`s and writes them all.
-Applications should generally call `writeBlocks` once for all blocks belonging to a shard.
+There is a new method `writeChunks` that takes an array of `DataBlock`s and writes them all.
+Applications should generally call `writeChunks` once for all chunks belonging to a shard.
 At this time, developers are responsible for determining which blocks belong to what shard,
 though a helper method may be added.
 
+::: {.callout-tip}
+## prefer `writeChunks` to `writeChunk`
+
+Using `writeChunks` will allow N5 to optimize write operations by grouping chunks by the block
+they belong to (if relevant). Calls to `writeChunk` will still work (if called serially)
+:::
+
+::: {.callout-warning}
+## Take care calling `writeChunk` in parallel
+
+Parallel calls to `writeChunk` that refer to the different chunks in the same block
+(shard) can cause data loss. It is the caller's responsibility to avoid this.
+:::
+
+
 ```java
-DataBlock<int[]>[] blocks;
-writer.writeBlocks(datasetPath, actualAttributes, blocks);
+DataBlock<int[]>[] chunks;
+writer.writeChunks(datasetPath, actualAttributes, chunks);
+```
+
+```java
+DataBlock<int[]> chunk;
+writer.writeChunk(datasetPath, actualAttributes, chunk);
 ```
 
 The method `writeBlock` still exists ands works for sharded datasets.
@@ -119,12 +195,79 @@ writer.writeBlock(datasetPath, actualAttributes, block);
 ```
 
 
-::: {.callout-tip}
-## prefer `writeBlocks` to `writeBlock`
-A noteworthy API change. 
 
-Using `writeBlocks` will allow N5 to optimize write operations by grouping blocks by the shard
-they belong to (if relevant). Calls to `writeBlock` will still work (if called serially)
+## Codecs
 
-Note: it is the caller's responsibility to ensure that parallel calls to `writeBlock`.
+This release introduces `Codec`s, which implement the same functionality as
+[Codecs in the Zarr v3 specification](https://zarr-specs.readthedocs.io/en/v3.1.0/v3/codecs/index.html).
+Developers generally do not have to worry about the details of Codecs, the one exception being compression algorithms.
+
+### DataCodec and Compression
+
+The [`DataCodec`](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/DataCodec.java)
+interface the the analogue of Zarr v3's `bytes -> bytes` codec.
+The [`Compression`](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/Compression.java)
+interface, a pre-existing N5 interterface, is now a special case of a `DataCodec`. It is otherwise backward-compatible and may
+still be used.
+
+
+### BlockCodec
+
+The [`BlockCodec`](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/BlockCodec.java)
+interface the the analogue of Zarr v3's `array -> bytes` codec.
+
+::: {.callout-warning}
+## Avoid manually specifying a `BlockCodec`
+
+Make sure you really know what you're doing if you specify a `BlockCodec` manually.
+This is because the particular `BlockCodec` that is needed depends on the storage format being used, and the N5 library will
+provide the correct `BlockCodec` by default (without code needing to know the type of your `N5Reader` / `N5Writer` instance).
+
+Take advantage of this!
+
+If you manually specify a `BlockCodec`, N5 will not check that it is valid for the storage format. You might accidentally write
+invalid data as a result.
 :::
+
+N5 will automatically set an appropriate `BlockCodec` when creating a `DatasetAttributes` if one is not explicitly specified.
+It does this by calling the `defaultBlockCodec` method. The base
+[`DatasetAttributes` returns an `N5BlockCodecInfo`](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/DatasetAttributes.java#L234-L236), but 
+[`ZarrV3DatasetAttributes` returns a `PaddedRawBlockCodecInfo`](https://github.com/saalfeldlab/n5-zarr/blob/ee718c938f5bc2e82e99188aafe101ba731395c1/src/main/java/org/janelia/saalfeldlab/n5/zarr/v3/ZarrV3DatasetAttributes.java#L219-L222)
+
+
+### DatasetCodec
+
+The [`DatasetCodec`](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/DatasetCodec.java)
+interface the the analogue of Zarr v3's `array -> array` codec.
+
+At the time of this writing the [TransposeCodec](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/transpose/TransposeCodec.java)
+is the only `DatasetCodec` in the core zarr-spec, and so the only such codec we've implemented,
+but additional `DatasetCodec`s are coming soon.
+
+
+### CodecInfo
+
+`CodecInfo`s are untyped semantic layers for `Codec`s that are (de)serialized from json metadata.
+
+Generally, you'll see that the objects that are passed around implement the
+[`CodecInfo`](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/CodecInfo.java)
+interface, not the `Codec` interface. This is because `Codec` implementations are typed, but this type information is not
+present in the json that represents the codec, but needs to be inferred from surrounding array metadata.
+
+For example, the zarr [`bytes` codec](https://zarr-specs.readthedocs.io/en/v3.1.0/v3/codecs/bytes/index.html) is serialized like this:
+
+```json
+{
+    "name": "bytes",
+    "configuration": { "endian": "little" }
+}
+```
+
+but its job is to convert a generic byte stream into a zarr chunk of a particular type. That type is specified
+elsewhere in the metadata. The bytes codec is represented by the 
+[RawBlockCodecInfo](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/RawBlockCodecInfo.java)
+which uses a `DatasetAttributes` (which has the type information) 
+to [create](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/RawBlockCodecInfo.java#L46-L49)
+a typed 
+[`RawBlockCodec`](https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/RawBlockCodecs.java#L81).
+
