@@ -17,18 +17,18 @@
 <width>144</width>
 </image>
 <generator>quarto-1.5.54</generator>
-<lastBuildDate>Mon, 22 Dec 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 31 Jul 2026 04:00:00 GMT</lastBuildDate>
 <item>
-  <title>N5 Development 2025</title>
+  <title>N5 development guide</title>
   <dc:creator>John Bogovic</dc:creator>
-  <link>https://imglib.github.io/imglib2-blog/posts/2025-12-22-n5-shard-dev/</link>
-  <description><![CDATA[ Developer-focused summary of N5 development toward sharding and zarr v3. ]]></description>
+  <link>https://imglib.github.io/imglib2-blog/posts/2026-07-31-n5-shard-dev/</link>
+  <description><![CDATA[ Developer-focused summary of N5 development sharding and zarr v3. ]]></description>
   <category>n5</category>
   <category>zarr</category>
   <category>imglib2</category>
   <category>java</category>
-  <guid>https://imglib.github.io/imglib2-blog/posts/2025-12-22-n5-shard-dev/</guid>
-  <pubDate>Mon, 22 Dec 2025 05:00:00 GMT</pubDate>
+  <guid>https://imglib.github.io/imglib2-blog/posts/2026-07-31-n5-shard-dev/</guid>
+  <pubDate>Fri, 31 Jul 2026 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>N5 attribute paths</title>
@@ -60,29 +60,6 @@
   <media:content url="https://imglib.github.io/imglib2-blog/posts/2024-02-27-n5-tutorial-basic/n5-basic-tutorial-thumbnail.png" medium="image" type="image/png" height="64" width="144"/>
 </item>
 <item>
-  <title>Position and displacement field transformations</title>
-  <dc:creator>John Bogovic</dc:creator>
-  <link>https://imglib.github.io/imglib2-blog/posts/2024-02-14-displacementFields/2024-02-14-displacementFields.html</link>
-  <description><![CDATA[ Create and apply non-linear transformations with Imglib2. ]]></description>
-  <category>imglib2</category>
-  <category>transform</category>
-  <category>deformation</category>
-  <category>displacement</category>
-  <guid>https://imglib.github.io/imglib2-blog/posts/2024-02-14-displacementFields/2024-02-14-displacementFields.html</guid>
-  <pubDate>Wed, 14 Feb 2024 05:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Adding Stream support to ImgLib2</title>
-  <dc:creator>Tobias Pietzsch</dc:creator>
-  <link>https://imglib.github.io/imglib2-blog/posts/2023-10-30-streams/2023-10-30-streams.html</link>
-  <description><![CDATA[ Examples and performance discussion of Java Streams in ImgLib2. ]]></description>
-  <category>imglib2</category>
-  <category>stream-api</category>
-  <category>java</category>
-  <guid>https://imglib.github.io/imglib2-blog/posts/2023-10-30-streams/2023-10-30-streams.html</guid>
-  <pubDate>Mon, 30 Oct 2023 04:00:00 GMT</pubDate>
-</item>
-<item>
   <title>How to work with the N5 API and ImgLib2?</title>
   <dc:creator>Stephan Saalfeld</dc:creator>
   <link>https://imglib.github.io/imglib2-blog/posts/2022-09-27-n5-imglib2.html</link>
@@ -107,29 +84,6 @@
   <category>notebook</category>
   <guid>https://imglib.github.io/imglib2-blog/posts/2022-09-04-how-to-display-imglib2-data.html</guid>
   <pubDate>Wed, 14 Sep 2022 04:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>User-configurable Keymaps</title>
-  <dc:creator>Tobias Pietzsch</dc:creator>
-  <link>https://imglib.github.io/imglib2-blog/posts/2022-08-08-keymaps/2022-08-08-keymaps.html</link>
-  <description><![CDATA[ How to set up user-configurable keyboard shortcuts using ui-behaviour and BigDataViewer’s Preferences Dialog ]]></description>
-  <category>ui-behaviour</category>
-  <category>bigdataviewer</category>
-  <guid>https://imglib.github.io/imglib2-blog/posts/2022-08-08-keymaps/2022-08-08-keymaps.html</guid>
-  <pubDate>Mon, 08 Aug 2022 04:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Setup the IJava jupyter kernel</title>
-  <dc:creator>Stephan Saalfeld</dc:creator>
-  <link>https://imglib.github.io/imglib2-blog/posts/setup-ijava-jupyter-kernel.html</link>
-  <description><![CDATA[ Follow these instructions to setup the IJava jupyter kernel by Spencer Park. ]]></description>
-  <category>jupyter</category>
-  <category>ijava</category>
-  <category>jshell</category>
-  <category>java</category>
-  <category>kernel</category>
-  <guid>https://imglib.github.io/imglib2-blog/posts/setup-ijava-jupyter-kernel.html</guid>
-  <pubDate>Sun, 05 Jun 2022 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Juliaset Lambda</title>

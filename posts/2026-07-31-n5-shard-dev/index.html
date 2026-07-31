@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="John Bogovic">
-<meta name="dcterms.date" content="2025-12-22">
-<meta name="description" content="Developer-focused summary of N5 development toward sharding and zarr v3.">
+<meta name="dcterms.date" content="2026-07-31">
+<meta name="description" content="Developer-focused summary of N5 development sharding and zarr v3.">
 
-<title>N5 Development 2025 – ImgLib2 news and tutorials</title>
+<title>N5 development guide – ImgLib2 news and tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -107,9 +107,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="N5 Development 2025 – ImgLib2 news and tutorials">
-<meta property="og:description" content="Developer-focused summary of N5 development toward sharding and zarr v3.">
-<meta property="og:image" content="https://imglib.github.io/imglib2-blog/posts/2025-12-22-n5-shard-dev/imglib2-logo.png">
+<meta property="og:title" content="N5 development guide – ImgLib2 news and tutorials">
+<meta property="og:description" content="Developer-focused summary of N5 development sharding and zarr v3.">
+<meta property="og:image" content="https://imglib.github.io/imglib2-blog/posts/2026-07-31-n5-shard-dev/imglib2-logo.png">
 <meta property="og:site_name" content="ImgLib2 news and tutorials">
 </head>
 
@@ -163,10 +163,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <div class="quarto-title-block"><div><h1 class="title">N5 Development 2025</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://github.com/imglib/imglib2-blog/blob/main/posts/2025-12-22-n5-shard-dev/index.qmd"><i class="bi"></i> Code</button></div></div>
+      <div class="quarto-title-block"><div><h1 class="title">N5 development guide</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://github.com/imglib/imglib2-blog/blob/main/posts/2026-07-31-n5-shard-dev/index.qmd"><i class="bi"></i> Code</button></div></div>
                   <div>
         <div class="description">
-          Developer-focused summary of N5 development toward sharding and zarr v3.
+          Developer-focused summary of N5 development sharding and zarr v3.
         </div>
       </div>
                           <div class="quarto-categories">
@@ -191,7 +191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">December 22, 2025</p>
+        <p class="date">July 31, 2026</p>
       </div>
     </div>
     
@@ -207,9 +207,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#creating-a-sharded-dataset" id="toc-creating-a-sharded-dataset" class="nav-link active" data-scroll-target="#creating-a-sharded-dataset">Creating a sharded dataset</a></li>
+  <li><a href="#nomenclature" id="toc-nomenclature" class="nav-link active" data-scroll-target="#nomenclature">Nomenclature</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#n5factory" id="toc-n5factory" class="nav-link" data-scroll-target="#n5factory">N5Factory</a>
+  <ul class="collapse">
+  <li><a href="#storage-format-specification" id="toc-storage-format-specification" class="nav-link" data-scroll-target="#storage-format-specification">Storage format specification</a></li>
+  <li><a href="#storage-format-extenstions" id="toc-storage-format-extenstions" class="nav-link" data-scroll-target="#storage-format-extenstions">Storage format extenstions</a></li>
+  </ul></li>
+  <li><a href="#creating-a-sharded-dataset" id="toc-creating-a-sharded-dataset" class="nav-link" data-scroll-target="#creating-a-sharded-dataset">Creating a sharded dataset</a></li>
   <li><a href="#high-level-writing" id="toc-high-level-writing" class="nav-link" data-scroll-target="#high-level-writing">High-level writing</a></li>
   <li><a href="#low-level-writing" id="toc-low-level-writing" class="nav-link" data-scroll-target="#low-level-writing">Low-level writing</a></li>
+  <li><a href="#codecs" id="toc-codecs" class="nav-link" data-scroll-target="#codecs">Codecs</a>
+  <ul class="collapse">
+  <li><a href="#datacodec-and-compression" id="toc-datacodec-and-compression" class="nav-link" data-scroll-target="#datacodec-and-compression">DataCodec and Compression</a></li>
+  <li><a href="#blockcodec" id="toc-blockcodec" class="nav-link" data-scroll-target="#blockcodec">BlockCodec</a></li>
+  <li><a href="#datasetcodec" id="toc-datasetcodec" class="nav-link" data-scroll-target="#datasetcodec">DatasetCodec</a></li>
+  <li><a href="#codecinfo" id="toc-codecinfo" class="nav-link" data-scroll-target="#codecinfo">CodecInfo</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -220,61 +234,128 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>An <a href="../../posts/2026-07-31-n5-shard-dev/index.html">updated version of this post</a> is available.</p>
-<p>This post for Java developers covers new, in-progress development for the <a href="https://github.com/saalfeldlab/n5">N5 API</a> that supports sharding and Zarr v3 and is intended as a migration guide to the new versions.</p>
-<p>Some specific noteworthy changes are called out in green boxes.</p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This information is subject to change as development progresses and new alpha versions are released.</p>
-</div>
-</div>
-<p>Examples below require the latest alpha releases at the time of this writing:</p>
+<p>This is an updated version of a post from <a href="../../posts/2025-12-22-n5-shard-dev/index.html">December 22, 2025</a>.</p>
+<p>This post for Java developers covers new, in-progress development for the <a href="https://github.com/saalfeldlab/n5">N5 API</a> that supports sharding and Zarr v3 and is intended as a migration guide to the new versions. Some specific noteworthy changes are called out in green boxes.</p>
+<p>Examples below require the latest releases at the time of this writing:</p>
 <ul>
-<li>n5-4.0.0-alpha-6</li>
-<li>n5-imglib2-7.1.0-alpha-6</li>
-<li>n5-universe:2.4.0-alpha-6</li>
-<li>n5-zarr-2.0.0-alpha-4</li>
-<li>n5-zstandard-2.0.0-alpha-4</li>
+<li>n5-4.0.2</li>
+<li>n5-imglib2-8.0.0</li>
+<li>n5-universe:3.0.2</li>
+<li>n5-zarr-2.0.1</li>
+<li>n5-zstandard-2.0.0</li>
 </ul>
+<section id="nomenclature" class="level2">
+<h2 class="anchored" data-anchor-id="nomenclature">Nomenclature</h2>
+<ul>
+<li>“Chunk” refers to the smallest (innermost) subdivision of the array</li>
+<li>“Block” refers to the largest (outermost) subdivision of the array
+<ul>
+<li>refers to shards when the array is sharded</li>
+<li>identical to chunks when the array is unsharded</li>
+</ul></li>
+<li>“Storage format” refers to one of (HDF5, N5, Zarr v2, Zarr v3).</li>
+<li>“Backend” refers to the file or object store on which the format is written (e.g., filesystem, aws-s3, google-cloud).</li>
+</ul>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Some changes to:</p>
+<ul>
+<li>N5Factory</li>
+</ul>
+<p>New low-level methods:</p>
+<ul>
+<li>N5Reader
+<ul>
+<li>readChunk</li>
+<li>readChunks</li>
+</ul></li>
+<li>N5Writer
+<ul>
+<li>writeChunk</li>
+<li>writeChunks</li>
+</ul></li>
+</ul>
+</section>
+<section id="n5factory" class="level2">
+<h2 class="anchored" data-anchor-id="n5factory">N5Factory</h2>
+<p>The <code>openReader</code> and <code>openWriter</code> methods in <code>N5Factory</code> return an <code>N5Reader</code> or <code>N5Writer</code>, respectively. The storage format is determined by (in order):</p>
+<ol type="1">
+<li>The user-specified storage format.</li>
+<li>Existing data at the specified location.</li>
+<li>Extension of the given location.</li>
+</ol>
+<section id="storage-format-specification" class="level3">
+<h3 class="anchored" data-anchor-id="storage-format-specification">Storage format specification</h3>
+<p>The changes for the <a href="https://github.com/saalfeldlab/n5-universe/blob/d290226f5a38ac6c6d5f0e2f8f026b2768ad7d74/src/main/java/org/janelia/saalfeldlab/n5/universe/StorageFormat.java"><code>StorageFormat</code></a> enum have to do with Zarr.</p>
+<p><code>StorageFormat.ZARR2</code>: is new and always refers to Zarr v2. N5Factory will fail if this is specified, but the URI points to a Zarr v3 hierarchy</p>
+<p><code>StorageFormat.ZARR3</code>: is new and always refers to Zarr v3. N5Factory will fail if this is specified, but the URI points to a Zarr v2 hierarchy</p>
+<p><code>StorageFormat.ZARR</code>: in past versions this always referred to Zarr v2. Now, if this is specified and points to an existing Zarr v2 or v3 hierarchy, then N5Factory will return an appropriate reader or writer. If this is specified for a writer when no Zarr hierarchy exists, then a N5Factory will return a Zarr v3 writer.</p>
+</section>
+<section id="storage-format-extenstions" class="level3">
+<h3 class="anchored" data-anchor-id="storage-format-extenstions">Storage format extenstions</h3>
+<p>This table lists the extensions for each storage format.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Storage Format</th>
+<th>Extensions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Zarr v3</td>
+<td><code>.zarr</code>, <code>.zarr3</code></td>
+</tr>
+<tr class="even">
+<td>Zarr v2</td>
+<td><code>.zarr</code>, <code>.zarr2</code></td>
+</tr>
+<tr class="odd">
+<td>N5</td>
+<td><code>.n5</code></td>
+</tr>
+<tr class="even">
+<td>HDF5</td>
+<td><code>.h5</code>, <code>.hdf</code>, <code>.hdf5</code></td>
+</tr>
+</tbody>
+</table>
+<p>For example:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>N5Factory factory <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">();</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">// opens a Zarr V2 writer</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>factory<span class="op">.</span><span class="fu">openWriter</span><span class="op">(</span>StorageFormat<span class="op">.</span><span class="fu">ZARR2</span><span class="op">,</span> <span class="st">"demo.weird-extension"</span><span class="op">)</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">// opens a Zarr v3 writer if the specified folder is empty or does not exist</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>factory<span class="op">.</span><span class="fu">openWriter</span><span class="op">(</span><span class="st">"demo-empty.zarr"</span><span class="op">)</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">// opens a Zarr v2 writer if the specified folder has v2 data</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>factory<span class="op">.</span><span class="fu">openWriter</span><span class="op">(</span><span class="st">"demo-existing-v2.zarr"</span><span class="op">)</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">// opens an n5 writer</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>factory<span class="op">.</span><span class="fu">openWriter</span><span class="op">(</span><span class="st">"demo.n5"</span><span class="op">)</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
 <section id="creating-a-sharded-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="creating-a-sharded-dataset">Creating a sharded dataset</h2>
-<p>Use <code>new N5Factory().openWriter(StorageFormat.ZARR, "demo.zarr"))</code> to create a Zarr v3 writer. Alternatively, you can manually create a new <code>ZarrV3KeyValueWriter</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// parameters</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">String</span> datasetPath <span class="op">=</span> <span class="st">""</span><span class="op">;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">long</span><span class="op">[]</span> imageDimensions <span class="op">=</span> <span class="op">{</span> <span class="dv">128</span><span class="op">,</span> <span class="dv">128</span><span class="op">,</span> <span class="dv">64</span> <span class="op">};</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>DataType dataType <span class="op">=</span> DataType<span class="op">.</span><span class="fu">INT32</span><span class="op">;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">[]</span> blockSize <span class="op">=</span> <span class="op">{</span><span class="dv">32</span><span class="op">,</span> <span class="dv">32</span><span class="op">,</span> <span class="dv">32</span><span class="op">};</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">[]</span> shardSize <span class="op">=</span> <span class="op">{</span><span class="dv">128</span><span class="op">,</span> <span class="dv">128</span><span class="op">,</span> <span class="dv">128</span><span class="op">};</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>ZstandardCompression compression <span class="op">=</span> <span class="kw">new</span> <span class="fu">ZstandardCompression</span><span class="op">();</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">// zarr -&gt; zarr3</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">// use StorageFormat.Zarr2 for zarr v2</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">// try block auto-closes the writer</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span>N5Writer writer <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openWriter</span><span class="op">(</span>StorageFormat<span class="op">.</span><span class="fu">ZARR</span><span class="op">,</span> <span class="st">"demo.zarr"</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">// create a dataset attributes instance to specify the</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">// dataset parameters with a specified shard size</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">// a default set of codecs are created</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    ZarrV3DatasetAttributes specAttributes <span class="op">=</span> ZarrV3DatasetAttributes</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">builder</span><span class="op">(</span>imageDimensions<span class="op">,</span> dataType<span class="op">)</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">blockSize</span><span class="op">(</span>blockSize<span class="op">)</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">shardShape</span><span class="op">(</span>shardSize<span class="op">)</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">compression</span><span class="op">(</span>compression<span class="op">)</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">build</span><span class="op">();</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">// use this instance for subsequent calls to readBlock(s) writeBlock(s)</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    DatasetAttributes actualAttributes <span class="op">=</span> writer<span class="op">.</span><span class="fu">createDataset</span><span class="op">(</span>datasetPath<span class="op">,</span> specAttributes<span class="op">);</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Note that N5Writers and Zarr 2 writers do not support sharding.</p>
+<p>Zarr v3 is the only storage format that supports sharding, so to create a sharded dataset, we need a Zarr v3 writer. Use <code>new N5Factory().openWriter(StorageFormat.ZARR3, "demo.zarr"))</code> to create a Zarr v3 writer, or urse a <code>ZarrV3KeyValueWriter</code> constructor to create one manually.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// try block auto-closes the writer</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span>N5Writer writer <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openWriter</span><span class="op">(</span>StorageFormat<span class="op">.</span><span class="fu">ZARR3</span><span class="op">,</span> <span class="st">"demo.zarr"</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// create a dataset attributes instance to specify the</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// dataset parameters with a specified shard size</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    ZarrV3DatasetAttributes specAttributes <span class="op">=</span> ZarrV3DatasetAttributes</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">// image dimensions and data type are required</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">builder</span><span class="op">(</span><span class="kw">new</span> <span class="dt">long</span><span class="op">[]{</span><span class="dv">128</span><span class="op">,</span> <span class="dv">128</span><span class="op">,</span> <span class="dv">64</span><span class="op">},</span> DataType<span class="op">.</span><span class="fu">INT32</span><span class="op">)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">blockSize</span><span class="op">(</span><span class="kw">new</span> <span class="dt">int</span><span class="op">[]{</span><span class="dv">32</span><span class="op">,</span> <span class="dv">32</span><span class="op">,</span> <span class="dv">32</span><span class="op">})</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">shardSize</span><span class="op">(</span><span class="kw">new</span> <span class="dt">int</span><span class="op">[]{</span><span class="dv">128</span><span class="op">,</span> <span class="dv">128</span><span class="op">,</span> <span class="dv">128</span><span class="op">})</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">compression</span><span class="op">(</span><span class="kw">new</span> <span class="fu">ZstandardCompression</span><span class="op">())</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">build</span><span class="op">();</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// use this instance for subsequent calls to readChunk(s) writeChunk(s)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    DatasetAttributes actualAttributes <span class="op">=</span> writer<span class="op">.</span><span class="fu">createDataset</span><span class="op">(</span><span class="st">""</span><span class="op">,</span> specAttributes<span class="op">);</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -287,43 +368,99 @@ Important
 <div class="callout-body-container callout-body">
 <p>A noteworthy API change.</p>
 <p>Different storage formats (HDF5, N5, Zarr) have different feature sets and have different default sets of codecs. N5 may need to convert a generic <code>DatasetAttributes</code> to a more specific type, e.g.&nbsp;<code>ZarrV3DatasetAttributes</code>. This more specific type is returned by <code>createDataset</code>.</p>
-<p>The motivation for this change was to enable subsequent calls to <code>readBlock</code> / <code>writeBlocks</code> to avoid repeating the overhead this conversion because these methods are usually called repeatedly.</p>
+<p>The motivation for this change was to enable subsequent calls to <code>readChunk</code> / <code>writeChunks</code> to avoid repeating the overhead this conversion because these methods are often called repeatedly with the same <code>DatasetAttributes</code>.</p>
 </div>
 </div>
 </section>
 <section id="high-level-writing" class="level2">
 <h2 class="anchored" data-anchor-id="high-level-writing">High-level writing</h2>
-<p>At the time of this writing, there are no changes to the methods of N5Utils. Methods support writing to shards and will optimize write operations appropriately - performing only one write operation per shard.</p>
+<p>There are no changes to the methods of N5Utils, and they support reading from and writing to shards.</p>
 <p>Note the use of the <code>saveBlock</code> method (instead of <code>save</code>) because it takes a <code>DatasetAttributes</code> instance, and current <code>save</code> methods do not enable specification of a sharded dataset (at this time).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>RandomAccessibleInterval<span class="op">&lt;</span>IntType<span class="op">&gt;</span> img<span class="op">;</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>N5Utils<span class="op">.</span><span class="fu">saveBlock</span><span class="op">(</span>img<span class="op">,</span> writer<span class="op">,</span> datasetPath<span class="op">,</span> actualAttributes<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>RandomAccessibleInterval<span class="op">&lt;</span>IntType<span class="op">&gt;</span> img<span class="op">;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>N5Utils<span class="op">.</span><span class="fu">saveBlock</span><span class="op">(</span>img<span class="op">,</span> writer<span class="op">,</span> datasetPath<span class="op">,</span> actualAttributes<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="low-level-writing" class="level2">
 <h2 class="anchored" data-anchor-id="low-level-writing">Low-level writing</h2>
-<p>There is a new method <code>writeBlocks</code> that takes an array of <code>DataBlock</code>s and writes them all. Applications should generally call <code>writeBlocks</code> once for all blocks belonging to a shard. At this time, developers are responsible for determining which blocks belong to what shard, though a helper method may be added.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>DataBlock<span class="op">&lt;</span><span class="dt">int</span><span class="op">[]&gt;[]</span> blocks<span class="op">;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>writer<span class="op">.</span><span class="fu">writeBlocks</span><span class="op">(</span>datasetPath<span class="op">,</span> actualAttributes<span class="op">,</span> blocks<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The method <code>writeBlock</code> still exists ands works for sharded datasets.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>DataBlock<span class="op">&lt;</span><span class="dt">int</span><span class="op">[]&gt;</span> block<span class="op">;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>writer<span class="op">.</span><span class="fu">writeBlock</span><span class="op">(</span>datasetPath<span class="op">,</span> actualAttributes<span class="op">,</span> block<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>There is a new method <code>writeChunks</code> that takes an array of <code>DataBlock</code>s and writes them all. Applications should generally call <code>writeChunks</code> once for all chunks belonging to a shard. At this time, developers are responsible for determining which blocks belong to what shard, though a helper method may be added.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-prefer <code>writeBlocks</code> to <code>writeBlock</code>
+prefer <code>writeChunks</code> to <code>writeChunk</code>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A noteworthy API change.</p>
-<p>Using <code>writeBlocks</code> will allow N5 to optimize write operations by grouping blocks by the shard they belong to (if relevant). Calls to <code>writeBlock</code> will still work (if called serially)</p>
-<p>Note: it is the caller’s responsibility to ensure that parallel calls to <code>writeBlock</code>.</p>
+<p>Using <code>writeChunks</code> will allow N5 to optimize write operations by grouping chunks by the block they belong to (if relevant). Calls to <code>writeChunk</code> will still work (if called serially)</p>
 </div>
 </div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Take care calling <code>writeChunk</code> in parallel
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Parallel calls to <code>writeChunk</code> that refer to the different chunks in the same block (shard) can cause data loss. It is the caller’s responsibility to avoid this.</p>
+</div>
+</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>DataBlock<span class="op">&lt;</span><span class="dt">int</span><span class="op">[]&gt;[]</span> chunks<span class="op">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>writer<span class="op">.</span><span class="fu">writeChunks</span><span class="op">(</span>datasetPath<span class="op">,</span> actualAttributes<span class="op">,</span> chunks<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>DataBlock<span class="op">&lt;</span><span class="dt">int</span><span class="op">[]&gt;</span> chunk<span class="op">;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>writer<span class="op">.</span><span class="fu">writeChunk</span><span class="op">(</span>datasetPath<span class="op">,</span> actualAttributes<span class="op">,</span> chunk<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The method <code>writeBlock</code> still exists ands works for sharded datasets.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>DataBlock<span class="op">&lt;</span><span class="dt">int</span><span class="op">[]&gt;</span> block<span class="op">;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>writer<span class="op">.</span><span class="fu">writeBlock</span><span class="op">(</span>datasetPath<span class="op">,</span> actualAttributes<span class="op">,</span> block<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="codecs" class="level2">
+<h2 class="anchored" data-anchor-id="codecs">Codecs</h2>
+<p>This release introduces <code>Codec</code>s, which implement the same functionality as <a href="https://zarr-specs.readthedocs.io/en/v3.1.0/v3/codecs/index.html">Codecs in the Zarr v3 specification</a>. Developers generally do not have to worry about the details of Codecs, the one exception being compression algorithms.</p>
+<section id="datacodec-and-compression" class="level3">
+<h3 class="anchored" data-anchor-id="datacodec-and-compression">DataCodec and Compression</h3>
+<p>The <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/DataCodec.java"><code>DataCodec</code></a> interface the the analogue of Zarr v3’s <code>bytes -&gt; bytes</code> codec. The <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/Compression.java"><code>Compression</code></a> interface, a pre-existing N5 interterface, is now a special case of a <code>DataCodec</code>. It is otherwise backward-compatible and may still be used.</p>
+</section>
+<section id="blockcodec" class="level3">
+<h3 class="anchored" data-anchor-id="blockcodec">BlockCodec</h3>
+<p>The <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/BlockCodec.java"><code>BlockCodec</code></a> interface the the analogue of Zarr v3’s <code>array -&gt; bytes</code> codec.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Avoid manually specifying a <code>BlockCodec</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Make sure you really know what you’re doing if you specify a <code>BlockCodec</code> manually. This is because the particular <code>BlockCodec</code> that is needed depends on the storage format being used, and the N5 library will provide the correct <code>BlockCodec</code> by default (without code needing to know the type of your <code>N5Reader</code> / <code>N5Writer</code> instance).</p>
+<p>Take advantage of this!</p>
+<p>If you manually specify a <code>BlockCodec</code>, N5 will not check that it is valid for the storage format. You might accidentally write invalid data as a result.</p>
+</div>
+</div>
+<p>N5 will automatically set an appropriate <code>BlockCodec</code> when creating a <code>DatasetAttributes</code> if one is not explicitly specified. It does this by calling the <code>defaultBlockCodec</code> method. The base <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/DatasetAttributes.java#L234-L236"><code>DatasetAttributes</code> returns an <code>N5BlockCodecInfo</code></a>, but <a href="https://github.com/saalfeldlab/n5-zarr/blob/ee718c938f5bc2e82e99188aafe101ba731395c1/src/main/java/org/janelia/saalfeldlab/n5/zarr/v3/ZarrV3DatasetAttributes.java#L219-L222"><code>ZarrV3DatasetAttributes</code> returns a <code>PaddedRawBlockCodecInfo</code></a></p>
+</section>
+<section id="datasetcodec" class="level3">
+<h3 class="anchored" data-anchor-id="datasetcodec">DatasetCodec</h3>
+<p>The <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/DatasetCodec.java"><code>DatasetCodec</code></a> interface the the analogue of Zarr v3’s <code>array -&gt; array</code> codec.</p>
+<p>At the time of this writing the <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/transpose/TransposeCodec.java">TransposeCodec</a> is the only <code>DatasetCodec</code> in the core zarr-spec, and so the only such codec we’ve implemented, but additional <code>DatasetCodec</code>s are coming soon.</p>
+</section>
+<section id="codecinfo" class="level3">
+<h3 class="anchored" data-anchor-id="codecinfo">CodecInfo</h3>
+<p><code>CodecInfo</code>s are untyped semantic layers for <code>Codec</code>s that are (de)serialized from json metadata.</p>
+<p>Generally, you’ll see that the objects that are passed around implement the <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/CodecInfo.java"><code>CodecInfo</code></a> interface, not the <code>Codec</code> interface. This is because <code>Codec</code> implementations are typed, but this type information is not present in the json that represents the codec, but needs to be inferred from surrounding array metadata.</p>
+<p>For example, the zarr <a href="https://zarr-specs.readthedocs.io/en/v3.1.0/v3/codecs/bytes/index.html"><code>bytes</code> codec</a> is serialized like this:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"bytes"</span><span class="fu">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"configuration"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"endian"</span><span class="fu">:</span> <span class="st">"little"</span> <span class="fu">}</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>but its job is to convert a generic byte stream into a zarr chunk of a particular type. That type is specified elsewhere in the metadata. The bytes codec is represented by the <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/RawBlockCodecInfo.java">RawBlockCodecInfo</a> which uses a <code>DatasetAttributes</code> (which has the type information) to <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/RawBlockCodecInfo.java#L46-L49">create</a> a typed <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/RawBlockCodecs.java#L81"><code>RawBlockCodec</code></a>.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
