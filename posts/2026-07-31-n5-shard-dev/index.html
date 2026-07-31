@@ -238,7 +238,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This is an updated version of a post from <a href="../../posts/2025-12-22-n5-shard-dev/index.html">December 22, 2025</a>.</p>
-<p>This post for Java developers covers new, in-progress development for the <a href="https://github.com/saalfeldlab/n5">N5 API</a> that supports sharding and Zarr v3 and is intended as a migration guide to the new versions. Some specific noteworthy changes are called out in green boxes.</p>
+<p>This post for Java developers covers the recent updates to the <a href="https://github.com/saalfeldlab/n5">N5 API</a>, adding support for sharding and Zarr v3 and, is intended as a migration guide to the new versions. Some specific noteworthy changes are called out in green boxes.</p>
 <p>Examples below require the latest releases at the time of this writing:</p>
 <ul>
 <li>n5-4.0.2</li>
@@ -308,11 +308,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td>Zarr v3</td>
-<td><code>.zarr</code>, <code>.zarr3</code></td>
+<td><code>.zarr</code></td>
 </tr>
 <tr class="even">
 <td>Zarr v2</td>
-<td><code>.zarr</code>, <code>.zarr2</code></td>
+<td><code>.zarr</code></td>
 </tr>
 <tr class="odd">
 <td>N5</td>
@@ -320,7 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td>HDF5</td>
-<td><code>.h5</code>, <code>.hdf</code>, <code>.hdf5</code></td>
+<td><code>.h5</code>, <code>.hdf5</code></td>
 </tr>
 </tbody>
 </table>
@@ -342,7 +342,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="creating-a-sharded-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="creating-a-sharded-dataset">Creating a sharded dataset</h2>
-<p>Zarr v3 is the only storage format that supports sharding, so to create a sharded dataset, we need a Zarr v3 writer. Use <code>new N5Factory().openWriter(StorageFormat.ZARR3, "demo.zarr"))</code> to create a Zarr v3 writer, or urse a <code>ZarrV3KeyValueWriter</code> constructor to create one manually.</p>
+<p>Zarr v3 is the only storage format that supports sharding, so to create a sharded dataset, we need a Zarr v3 writer. Use <code>new N5Factory().openWriter(StorageFormat.ZARR3, "demo.zarr"))</code> to create a Zarr v3 writer, or use a <code>ZarrV3KeyValueWriter</code> constructor to create one manually.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// try block auto-closes the writer</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> <span class="op">(</span>N5Writer writer <span class="op">=</span> <span class="kw">new</span> <span class="fu">N5Factory</span><span class="op">().</span><span class="fu">openWriter</span><span class="op">(</span>StorageFormat<span class="op">.</span><span class="fu">ZARR3</span><span class="op">,</span> <span class="st">"demo.zarr"</span><span class="op">))</span> <span class="op">{</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -424,7 +424,7 @@ Take care calling <code>writeChunk</code> in parallel
 <p>This release introduces <code>Codec</code>s, which implement the same functionality as <a href="https://zarr-specs.readthedocs.io/en/v3.1.0/v3/codecs/index.html">Codecs in the Zarr v3 specification</a>. Developers generally do not have to worry about the details of Codecs, the one exception being compression algorithms.</p>
 <section id="datacodec-and-compression" class="level3">
 <h3 class="anchored" data-anchor-id="datacodec-and-compression">DataCodec and Compression</h3>
-<p>The <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/DataCodec.java"><code>DataCodec</code></a> interface the the analogue of Zarr v3’s <code>bytes -&gt; bytes</code> codec. The <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/Compression.java"><code>Compression</code></a> interface, a pre-existing N5 interterface, is now a special case of a <code>DataCodec</code>. It is otherwise backward-compatible and may still be used.</p>
+<p>The <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/codec/DataCodec.java"><code>DataCodec</code></a> interface the the analogue of Zarr v3’s <code>bytes -&gt; bytes</code> codec. The <a href="https://github.com/saalfeldlab/n5/blob/7529e34badc805ce89508a66e38ee5aa62bf43aa/src/main/java/org/janelia/saalfeldlab/n5/Compression.java"><code>Compression</code></a> interface, a pre-existing N5 interface, is now a special case of a <code>DataCodec</code>. It is otherwise backward-compatible and may still be used.</p>
 </section>
 <section id="blockcodec" class="level3">
 <h3 class="anchored" data-anchor-id="blockcodec">BlockCodec</h3>
