@@ -1,6 +1,9 @@
 ---
 listing:
-  contents: posts
+  contents:
+    - "posts/*/index.qmd"
+    - "posts/*ipynb"
+    - "!posts/2025-12-22-n5-shard-dev"
   sort: "date desc"
   type: default
   categories: true
